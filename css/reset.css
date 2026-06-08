@@ -1,0 +1,22 @@
+/* Reset e base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+*,
+*::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Roalgem suave */
+html, body {  
+  font-weight: 600;                                        
+  /* scroll-behavior: smooth; */
+  overflow-x: none;
+  overscroll-behavior: none; /* bloqueia o scrool além do conteúdo */
+}
+
+a {
+  text-decoration: none;
+}

@@ -1,0 +1,24 @@
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--texto);
+  font-weight: 400;
+  background: var(--bg);
+}
+
+section {
+  padding: 2rem;
+  padding-left: calc(20% + 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  width: 100%;
+  height: fit-content;
+  min-height: 100dvh;
+  display: block;
+}
+
+section.active {
+  display: flex;
+  flex-direction: column;
+}
+

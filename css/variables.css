@@ -1,0 +1,31 @@
+/* Light Mode */
+:root {
+  --bg: #F4F5F7;
+  --card: #FFFFFF;
+  --destaque: #3B6D11;
+  --hover: #2D5A0E;
+  --texto: #111827;
+  --neutro: #6B7280;
+  --negativo: #DC2626;
+  --card-border: 1px solid rgba(107, 114, 128, 0.25);
+  --logoImg: url("../assets/icons/logo-light.svg");
+
+  --semi-transparent-bg-negativo: rgba(220, 38, 38, 0.1);
+  --semi-transparent-bg: rgba(59, 109, 17, 0.1)
+}
+
+/* Dark Mode */
+.dark {
+  --bg: #0F1115;
+  --card: #181818;
+  --destaque: #9FE870;
+  --hover: #7CCF59;
+  --texto: #EDEDED;
+  --neutro: #9CA3AF;
+  --negativo: #F87171;
+  --card-border: 1px solid rgba(156, 163, 175, 0.25);
+  --logoImg: url("../assets/icons/logo-dark.svg");
+
+  --semi-transparent-bg-negativo: rgba(248, 113, 113, 0.1);
+  --semi-transparent-bg: rgba(159, 232, 112, 0.1)
+}

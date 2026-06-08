@@ -1,0 +1,70 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: var(--card);
+  border: var(--card-border);
+  border-radius: 1rem;
+  width: 100%;
+  height: fit-content;
+}
+
+.card h5 {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--neutro);
+}
+
+.card h4 {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+table {
+  padding: 0 1rem;
+}
+
+table th {
+  color: var(--neutro);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1.25rem 1rem 0.25rem;
+}
+
+table td {
+  border-top: var(--card-border);
+  text-align: center;
+  padding: 0.75rem 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+table tbody tr :nth-child(even) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+table tbody :nth-child(1) i {
+  color: red;
+}
+table tbody :nth-child(2) i {
+  color: var(--destaque);
+}
+table tbody :nth-child(3) i {
+  color: blue;
+}
+table tbody :nth-child(4) i {
+  color: yellow;
+}
+
+table td .fa-circle {
+  font-size: 0.75rem;
+}

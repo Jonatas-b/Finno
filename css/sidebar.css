@@ -1,0 +1,120 @@
+.sidebar {
+  background: var(--card);
+  border: var(--card-border);
+  padding: 1rem 1rem 3rem;
+  max-width: 20.8%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+}
+
+header {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  border-bottom: var(--card-border);
+  width: 100%;
+}
+
+header img {
+  align-self: flex-start;
+  content: var(--logoImg);
+  scale: 0.6;
+  margin-left: -3rem;
+}
+
+.links {
+  width: 100%;
+  height: 100%;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border-bottom: var(--card-border);
+}
+
+.atalho {
+  color: var(--neutro);
+  border-radius: 0.625rem;
+  padding: 0.625rem .875rem;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+  gap: 1rem;
+  font-weight: 500;
+  font-size: 1.063rem;
+}
+
+.atalho.active {
+  background: rgba(59, 109, 17, 0.12);
+  color: var(--destaque);
+  font-size: 1.12rem;
+}
+
+.atalho:hover {
+  scale: 1.04;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.theme {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+  padding: 0 0.8rem;
+}
+
+.theme i {
+  font-size: 1rem;
+  color: var(--destaque);
+}
+
+.theme p {
+  color: var(--neutro);
+  font-size: 1.063rem;
+  font-weight: 500;
+}
+.toggle-theme-bg {
+  width: 3rem;
+  height: auto;
+  background: var(--neutro);
+  border: none;
+  border-radius: 1rem;
+  padding: 4px;
+  aspect-ratio: 2 / 1;
+  display: flex;
+  align-items: center;
+  transition: all ease-in-out 0.2s;
+}
+
+.toggle-theme-bg:hover {
+  cursor: pointer;
+}
+
+.btn-toggle-active {
+  background: var(--destaque);
+  transition: all ease-in-out 0.2s;
+}
+
+.toggle-theme-switch{
+  background: var(--bg);
+  width: 1rem;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  transition: all ease-in-out 0.2s;
+}
+
+.switch-toggle-active {
+  transform: translateX(1.55rem);
+  transition: transform ease-in-out 0.2s;
+}
