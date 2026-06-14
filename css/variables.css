@@ -11,7 +11,8 @@
   --logoImg: url("../assets/icons/logo-light.svg");
 
   --semi-transparent-bg-negativo: rgba(220, 38, 38, 0.1);
-  --semi-transparent-bg: rgba(59, 109, 17, 0.1)
+  --semi-transparent-bg: rgba(59, 109, 17, 0.1);
+  --semi-transparent-neutro: rgba(107, 114, 128, 0.1);
 }
 
 /* Dark Mode */
@@ -27,5 +28,6 @@
   --logoImg: url("../assets/icons/logo-dark.svg");
 
   --semi-transparent-bg-negativo: rgba(248, 113, 113, 0.1);
-  --semi-transparent-bg: rgba(159, 232, 112, 0.1)
+  --semi-transparent-bg: rgba(159, 232, 112, 0.1);
+  --semi-transparent-neutro: rgba(156, 163, 175, 0.1);
 }

@@ -12,14 +12,18 @@
     <link rel="stylesheet" href="css/sidebar.css" />
     <link rel="stylesheet" href="css/componentes.css" />
     <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/lancamentos.css" />
+    <link rel="stylesheet" href="css/analise.css" />
 
     <!-- Fonte -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
+
 
     <!-- Ícones da UI -->
     <link
@@ -31,23 +35,23 @@
     <nav class="sidebar">
       <header><img src="" alt="Logo Finno" /></header>
       <div class="links">
-        <div class="atalho dashboard active">
+        <div class="atalho active" data-target="dashboard">
           <i class="fa-solid fa-chart-bar"></i>
           <p>Dashboard</p>
         </div>
-        <div class="atalho lancamentos">
+        <div class="atalho" data-target="lancamentos">
           <i class="fa-solid fa-plus"></i>
           <p>Lançamentos</p>
         </div>
-        <div class="atalho analise">
+        <div class="atalho" data-target="analise">
           <i class="fa-solid fa-chart-pie"></i>
           <p>Análise</p>
         </div>
-        <div class="atalho historico">
+        <div class="atalho" data-target="historico">
           <i class="fa-solid fa-clock-rotate-left"></i>
           <p>Histórico</p>
         </div>
-        <div class="atalho configuracoes">
+        <div class="atalho" data-target="configuracoes">
           <i class="fa-solid fa-gear"></i>
           <p>Configurações</p>
         </div>
@@ -62,7 +66,7 @@
     </nav>
 
     <!-- SEÇÂO DASHBOARD -->
-    <section class="dashboard active">
+    <section class="dashboard active" id="dashboard">
       <div class="dashboard-top">
         <div class="title">
           <h1>Olá, Jônatas</h1>
@@ -83,17 +87,17 @@
       <div class="cards">
         <div class="card">
           <h5>SALÁRIO</h5>
-        <h4>R$ 5.000</h4>
+        <h4><em>R$ 5.000</em></h4>
         <b>fixo</b>
       </div>
       <div class="card">
         <h5>TOTAL GASTO</h5>
-        <h4>R$ 3.800</h4>
+        <h4><em>R$ 3.800</em></h4>
         <b class=" negativo-info">8% vs abr</b>
       </div>
       <div class="card">
         <h5>SALDO RESTANTE</h5>
-        <h4>R$ 1.200</h4>
+        <h4><em>R$ 1.200</em></h4>
         <b>12%</b>
       </div>
     </div>
@@ -109,7 +113,7 @@
         <p class="info">Meta: manter abaixo de 70% · Projeção: R$ 950 ao final do mês</p>
       </div>
 
-      <div class="info-adicional">
+      <div class="half">
         <div class="card">
           <h3>Últimos lançamentos</h3>
           <table>
@@ -123,22 +127,22 @@
             <tbody>
               <tr>
                 <td>Mercado</td>
-                <td><i class="fa-solid fa-circle"></i>Alimentação</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
                 <td>-R$ 340</td>
               </tr>
               <tr>
                 <td>Freelancer</td>
-                <td><i class="fa-solid fa-circle"></i>Receita</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Receita</td>
                 <td>+R$ 800</td>
               </tr>
               <tr>
                 <td>Aluguel</td>
-                <td><i class="fa-solid fa-circle"></i>Moradia</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Moradia</td>
                 <td>-R$ 1.200</td>
               </tr>
               <tr>
                 <td>Uber</td>
-                <td><i class="fa-solid fa-circle"></i>Transporte</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Transporte</td>
                 <td>-R$ 85</td>
               </tr>
             </tbody>
@@ -149,19 +153,205 @@
         </div>
       </div>
     </section>
-<!-- 
-    <section class="lancamentos">
-      <p>Lançamentos</p>
+
+    <!-- SEÇÃO LANÇAMENTOS -->
+    <section class="lancamentos" id="lancamentos">
+      <div class="title">
+        <h2>Lançamentos</h2>
+        <p>Registre receitas e despezas</p>
+      </div>
+
+      <div class="card">
+        <h3>Novo lançamento</h3>
+        <div class="buttons">
+          <p class="despeza"><i class="fa-solid fa-arrow-down"></i> Despezas</p>
+          <p class="receita"><i class="fa-solid fa-arrow-up"></i> Receita</p>
+        </div>
+
+        <div class="lacamento-config">
+          <div class="inputAndLabel">
+            <label for="description">DESCRIÇÃO</label>
+            <input type="text" id="description" class="input" placeholder="Ex: Mercado, Salário...">
+          </div>
+          <div class="inputAndLabel">
+            <label for="value">VALOR</label>
+            <input type="number" id="value" class="input" placeholder="R$ 0,00">
+          </div>
+          <div class="inputAndLabel">
+            <label for="category">CATEGORIA</label>
+            <select id="category" class="input">
+              <option value="alimentacao">Alimentação</option>
+            </select>
+          </div>
+          <div class="inputAndLabel">
+            <label for="date">DATA</label>
+            <input type="date" id="date" class="input">
+          </div>
+          <div class="inputAndLabel">
+            <label for="type">TIPO</label>
+            <select id="type" class="input">
+              <option value="unica">Única</option>
+            </select>
+          </div>
+          <div class="inputAndLabel">
+            <label for="recorrencia">RECORRÊNCIA</label>
+            <select id="recorrencia" class="input">
+              <option value="naoRepete">Não repete</option>
+            </select>
+          </div>          
+        </div>
+
+        <div class="confirm-buttons">
+          <button class="salvar">Salvar lançamento</button>
+          <button class="cancelar">Cancelar</button>
+        </div>
+      </div>
+      <div class="card">
+            <h3>Maio 2026</h3>
+
+            <table>
+            <thead>
+              <tr>
+                <th>DESCRIÇÃO</th>
+                <th>CATEGORIA</th>
+                <th>DATA</th>
+                <th>TIPO</th>
+                <th>VALOR</th>
+                <th>AÇÕES</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mercado</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
+                <td>10/05</td>
+                <td>Única</td>
+                <td>-R$ 340</td>
+                <td><div><button>Editar</button><button>Excluir</button><div></td>
+              </tr>
+              <tr>
+                <td>Freelancer</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Receita</td>
+                <td>08/05</td>
+                <td>Única</td>
+                <td>+ R$ 800</td>
+                <td><div><button>Editar</button><button>Excluir</button><div></td>
+              </tr>
+              <tr>
+                <td>Aluguel</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Moradia</td>
+                <td>05/05</td>
+                <td>Fixo</td>
+                <td>-R$ 1.200</td>
+                <td><div><button>Editar</button><button>Excluir</button><div></td>
+              </tr>
+              <tr>
+                <td>Uber</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Transporte</td>
+                <td>12/05</td>
+                <td>Única</td>
+                <td>-R$ 85</td>
+                <td><div><button>Editar</button><button>Excluir</button><div></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
     </section>
-    <section class="analise">
-      <p>Análise</p>
+
+    <!-- SEÇÃO ANÁLISE -->
+    <section class="analise" id="analise">
+      <div class="title">
+        <h2>Análise</h2>
+        <p>Maio 2026 · gráficos e recomendações</p>
+      </div>
+
+      <div class="half">
+        <div class="card">
+          <h3>Gastos por categoria</h3>
+          <table>
+            <tbody>
+              <tr>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
+                <td>R$ 340</td>
+              </tr>
+              <tr>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Receita</td>
+                <td>R$ 800</td>
+              </tr>
+              <tr>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Moradia</td>
+                <td>R$ 1.200</td>
+              </tr>
+              <tr>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Transporte</td>
+                <td>R$ 85</td>
+              </tr>
+              <tr>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Lazer</td>
+                <td>R$ 620</td>
+              </tr>
+              <tr>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Saúde</td>
+                <td>R$ 260</td>
+              </tr>
+              <tr>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Outros</td>
+                <td>R$ 500</td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+      
+      <div class="card">
+        <h3>Evolução - últimos 6 meses</h3>
+      </div>
+    </div>
+
+      <div class="card">
+        <h3>Regra 50/30/20 - sua situação</h3>
+        <div class="bars-infos">
+          <p class="data-name">Necessidades (50%)</p>
+          <div class="bar-bg">
+            <div class="bar-fill"></div>
+          </div>
+          <p class="porcentagem">56%</p>
+        </div>
+
+        <div class="bars-infos">
+          <p class="data-name">Desejos (30%)</p>
+          <div class="bar-bg">
+            <div class="bar-fill"></div>
+          </div>
+          <p class="porcentagem">20%</p>
+        </div>
+
+        <div class="bars-infos">
+          <p class="data-name">Poupança (20%)</p>
+          <div class="bar-bg">
+            <div class="bar-fill"></div>
+          </div>
+          <p class="porcentagem">0%</p>
+        </div>
+      </div>
+
+      <div class="card card-destaque">
+        <h3>Análise financeira do mês</h3>
+        <ul>
+          <li><i class="fa-solid fa-arrow-right"></i>Poupança zerada — você está gastando 100% da renda. Risco alto.</li>
+          <li><i class="fa-solid fa-arrow-right"></i>Lazer em R$ 620 está 40% acima da média dos últimos 3 meses (R$ 443).</li>
+          <li><i class="fa-solid fa-arrow-right"></i>Se reduzir lazer em R$ 300, já cobre 30% da meta de poupança ideal.</li>
+          <li><i class="fa-solid fa-arrow-right"></i>Projeção: se mantiver o ritmo atual, fecha o mês com R$ 950 de saldo.</li>
+        </ul>
+      </div>
     </section>
-    <section class="historico">
-      <p>Histórico</p>
+
+    <section class="historico" id="historico">
+      <h2>Histórico</h2>
     </section>
-    <section class="configuracoes">
-      <p>Configurações</p>
-    </section> -->
+
+    <section class="configuracoes" id="configuracoes">
+      <h2>Configurações</h2>
+    </section>
 
     <script type="module" src="./js/app.js"></script>
   </body>

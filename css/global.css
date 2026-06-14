@@ -14,11 +14,22 @@ section {
   width: 100%;
   height: fit-content;
   min-height: 100dvh;
-  display: block;
+  display: none;
 }
 
 section.active {
   display: flex;
   flex-direction: column;
+}
+
+h1, h2 {
+  font-family: 'Playfair', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+}
+
+em {
+  font-family: 'Playfair', sans-serif;
+  font-weight: 700;
 }
 

@@ -1,0 +1,71 @@
+.analise table tbody tr td {
+  text-align: left;
+}
+
+.analise table tbody tr td.item-name {
+  justify-content: start;
+}
+
+.analise table tbody tr td:nth-child(2) {
+  color: var(--negativo);
+  text-align: end;
+}
+
+.bars-infos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+}
+
+.bars-infos .data-name {
+  font-size: 1.125rem;
+  color: var(--neutro);
+  text-wrap: nowrap;
+}
+
+.bars-infos .bar-bg {
+  width: 100%;
+  height: 0.75rem;
+  border-radius: 0.75rem;
+  background: var(--semi-transparent-neutro);
+  max-width: 750px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.bars-infos .bar-fill {
+  height: 100%;
+  width: 56%;
+  background: var(--destaque);
+  border-radius: 0.75rem;
+}
+
+.porcentagem {
+  font-size: 1.125rem;
+}
+
+.card-destaque {
+  border: solid 1px var(--destaque);
+  color: var(--destaque);
+  background: linear-gradient(165deg, rgba(59, 109, 17, 0.2) 0%, rgba(255, 255, 255, 0.22) 100%);
+}
+
+.analise .card-destaque ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.analise .card-destaque ul li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.analise .card-destaque ul li i {
+  font-size: 0.875rem;
+}
