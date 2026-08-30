@@ -56,11 +56,8 @@ table td {
   font-weight: 600;
 }
 
-table tbody tr .item-name {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
+table tbody tr .item-name .fa-circle {
+  margin-right: 0.5rem;
 }
 
 table tbody :nth-child(1) i {

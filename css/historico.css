@@ -1,0 +1,10 @@
+/* Filtro */
+.historico-filtro {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.historico .historico-filtro :nth-child() {
+  color: var(--text);
+}

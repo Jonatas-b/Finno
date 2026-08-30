@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="css/dashboard.css" />
     <link rel="stylesheet" href="css/lancamentos.css" />
     <link rel="stylesheet" href="css/analise.css" />
+    <link rel="stylesheet" href="css/historico.css" />
+    <link rel="stylesheet" href="css/configuracoes.css" />
 
     <!-- Fonte -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,6 +26,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
 
+    <!-- Ícone do navegador -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon_io/favicon-16x16.png">
+    <!-- <link rel="manifest" href="/assets/favicon_io/site.webmanifest"> -->
 
     <!-- Ícones da UI -->
     <link
@@ -56,53 +63,53 @@
           <p>Configurações</p>
         </div>
       </div>
-      <div class="theme">
+      <!-- <div class="theme">
         <i class="fa-solid fa-sun" id="theme-icon"></i>
         <p  id="theme-name">Light Mode</p>
         <button class="toggle-theme-bg" id="toggleBg">
           <div class="toggle-theme-switch" id="slider"></div>
         </button>
-      </div>
+      </div> -->
     </nav>
 
     <!-- SEÇÂO DASHBOARD -->
     <section class="dashboard active" id="dashboard">
       <div class="dashboard-top">
         <div class="title">
-          <h1>Olá, Jônatas</h1>
+          <h1 id="saudacaoNome"></h1>
           <p>Resumo de Maio de 2026</p>
         </div>
         <div class="toggle-mes">
           <button><i class="fa-solid fa-angle-left"></i></button>
-          <p>Mai / 2026</p>
+          <p>Ago / 2026</p>
           <button><i class="fa-solid fa-angle-right"></i></button>
         </div>
       </div>
 
-      <p class="warning">
+      <!-- <p class="warning">
         <i class="fa-solid fa-warning"></i>Você já comprometeu 76% do seu
         salário este mês.
-      </p>
+      </p> -->
 
       <div class="cards">
         <div class="card">
           <h5>SALÁRIO</h5>
-        <h4><em>R$ 5.000</em></h4>
+        <h4><em id="salario">R$ 0,00</em></h4>
         <b>fixo</b>
       </div>
       <div class="card">
         <h5>TOTAL GASTO</h5>
-        <h4><em>R$ 3.800</em></h4>
-        <b class=" negativo-info">8% vs abr</b>
+        <h4><em>R$ 0,00</em></h4>
+        <!-- <b class=" negativo-info">porcentagem a mais ou a menos em relação ao mês anterior</b> -->
       </div>
       <div class="card">
         <h5>SALDO RESTANTE</h5>
-        <h4><em>R$ 1.200</em></h4>
-        <b>12%</b>
+        <h4><em>R$ 0,00</em></h4>
+        <!-- <b>porcentagem do salário que ainda resta</b> -->
       </div>
     </div>
       
-      <div class="card projecao">
+      <!-- <div class="card projecao">
         <div class="title">
           <h3>Comprometimento do salário</h3>
           <p>76% utilizado</p>
@@ -111,7 +118,7 @@
           <div class="bar"></div>
         </div>
         <p class="info">Meta: manter abaixo de 70% · Projeção: R$ 950 ao final do mês</p>
-      </div>
+      </div> -->
 
       <div class="half">
         <div class="card">
@@ -124,33 +131,13 @@
                 <th>VALOR</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Mercado</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
-                <td>-R$ 340</td>
-              </tr>
-              <tr>
-                <td>Freelancer</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Receita</td>
-                <td>+R$ 800</td>
-              </tr>
-              <tr>
-                <td>Aluguel</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Moradia</td>
-                <td>-R$ 1.200</td>
-              </tr>
-              <tr>
-                <td>Uber</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Transporte</td>
-                <td>-R$ 85</td>
-              </tr>
+            <tbody id="tabelaResumo">
             </tbody>
           </table>
         </div>
-        <div class="card">
+        <!-- <div class="card">
           <h3>Gastos por categoria</h3>
-        </div>
+        </div> -->
       </div>
     </section>
 
@@ -175,12 +162,20 @@
           </div>
           <div class="inputAndLabel">
             <label for="value">VALOR</label>
-            <input type="number" id="value" class="input" placeholder="R$ 0,00">
+            <input type="text" id="value" class="input" placeholder="R$ 0,00">
           </div>
           <div class="inputAndLabel">
             <label for="category">CATEGORIA</label>
             <select id="category" class="input">
               <option value="alimentacao">Alimentação</option>
+              <option value="moradia">Moradia</option>
+              <option value="transporte">Transporte</option>
+              <option value="saude">Saúde</option>
+              <option value="lazer">Lazer</option>
+              <option value="educacao">Educação</option>
+              <option value="vestuario">Vestuário</option>
+              <option value="receita">Receita</option>
+              <option value="outros">Outros</option>
             </select>
           </div>
           <div class="inputAndLabel">
@@ -191,6 +186,7 @@
             <label for="type">TIPO</label>
             <select id="type" class="input">
               <option value="unica">Única</option>
+              <option value="mensal">Mensal</option>
             </select>
           </div>
           <div class="inputAndLabel">
@@ -202,7 +198,7 @@
         </div>
 
         <div class="confirm-buttons">
-          <button class="salvar">Salvar lançamento</button>
+          <button id="salvarLancamento" class="salvar">Salvar lançamento</button>
           <button class="cancelar">Cancelar</button>
         </div>
       </div>
@@ -220,39 +216,7 @@
                 <th>AÇÕES</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Mercado</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
-                <td>10/05</td>
-                <td>Única</td>
-                <td>-R$ 340</td>
-                <td><div><button>Editar</button><button>Excluir</button><div></td>
-              </tr>
-              <tr>
-                <td>Freelancer</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Receita</td>
-                <td>08/05</td>
-                <td>Única</td>
-                <td>+ R$ 800</td>
-                <td><div><button>Editar</button><button>Excluir</button><div></td>
-              </tr>
-              <tr>
-                <td>Aluguel</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Moradia</td>
-                <td>05/05</td>
-                <td>Fixo</td>
-                <td>-R$ 1.200</td>
-                <td><div><button>Editar</button><button>Excluir</button><div></td>
-              </tr>
-              <tr>
-                <td>Uber</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Transporte</td>
-                <td>12/05</td>
-                <td>Única</td>
-                <td>-R$ 85</td>
-                <td><div><button>Editar</button><button>Excluir</button><div></td>
-              </tr>
+            <tbody id="tabelaLancamentos">
             </tbody>
           </table>
           </div>
@@ -345,12 +309,174 @@
       </div>
     </section>
 
+    <!-- SEÇÃO HISTÓRICO -->
     <section class="historico" id="historico">
       <h2>Histórico</h2>
+
+      <div class="historico-filtro">
+          <input class="input" type="month" >
+
+          <select class="input">
+            <option value="alimentacao">Alimentação</option>
+            <option value="moradia">Moradia</option>
+            <option value="transporte">Transporte</option>
+            <option value="saude">Saúde</option>
+            <option value="lazer">Lazer</option>
+            <option value="lazer">Educação</option>
+            <option value="lazer">Vestuário</option>
+            <option value="lazer">Receita</option>
+            <option value="lazer">Outros</option>
+          </select>
+
+          <button class="input"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button>
+          <button class="input"><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button>
+      </div>
+        
+      <div class="cards">
+        <div class="card">
+          <h5>SALÁRIO</h5>
+          <h4><em>R$ 5.000</em></h4>
+          <b>fixo</b>
+        </div>
+        <div class="card">
+          <h5>TOTAL GASTO</h5>
+          <h4><em>R$ 3.800</em></h4>
+          <b class=" negativo-info">8% vs abr</b>
+        </div>
+        <div class="card">
+          <h5>SALDO RESTANTE</h5>
+          <h4><em>R$ 1.200</em></h4>
+          <b>12%</b>
+        </div>
+      </div>
+
+      <div class="card">
+            <h3>Maio 2026</h3>
+
+            <table>
+            <thead>
+              <tr>
+                <th>DESCRIÇÃO</th>
+                <th>CATEGORIA</th>
+                <th>DATA</th>
+                <th>TIPO</th>
+                <th>VALOR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mercado</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
+                <td>10/05</td>
+                <td>Única</td>
+                <td>-R$ 340</td>
+              </tr>
+              <tr>
+                <td>Freelancer</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Receita</td>
+                <td>08/05</td>
+                <td>Única</td>
+                <td>+ R$ 800</td>
+              </tr>
+              <tr>
+                <td>Aluguel</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Moradia</td>
+                <td>05/05</td>
+                <td>Fixo</td>
+                <td>-R$ 1.200</td>
+              </tr>
+              <tr>
+                <td>Uber</td>
+                <td class="item-name"><i class="fa-solid fa-circle"></i>Transporte</td>
+                <td>12/05</td>
+                <td>Única</td>
+                <td>-R$ 85</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
     </section>
 
     <section class="configuracoes" id="configuracoes">
       <h2>Configurações</h2>
+
+      <div class="card">
+        <h3>Financeiro</h3>
+        <div class="config">
+          <div class="infoConfig">
+            <p>Nome</p>
+            <h5>Como gostaria de ser chamado?</h5>
+          </div>
+          <input type="text" id="inputName" class="input">
+        </div>
+        <div class="config">
+          <div class="infoConfig">
+            <p>Salário mensal líquido</p>
+            <h5>Usado para calcular % comprometido e regra 50/30/20</h5>
+          </div>
+          <input type="text" id="inputSalario" placeholder="R$ 0,00" class="input">
+        </div>
+        <div class="config">
+          <div class="infoConfig">
+            <p>Alerta de comprometimento</p>
+            <h5>Notificar quando ultrapassar este % do salário</h5>
+          </div>
+          <select id="inputAlerta" class="input">
+            <option value="50%">50%</option>
+            <option value="60%">60%</option>
+            <option value="70%">70%</option>
+            <option value="80%">80%</option>
+          </select>
+        </div>
+        <div class="configBtnSalvar">
+          <button id="btnSalvarInfoUser">Salvar</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Aparência</h3>
+        <div class="config">
+          <div class="infoConfig">
+            <p>Tema</p>
+            <h5>Dark ou light mode</h5>
+          </div>
+          <button id="buttonToggleThemeConfig" class="btnGreen">Light mode</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Dados</h3>
+        <div class="config">
+          <div class="infoConfig">
+            <p>Exportar backup completo</p>
+            <h5>Todos os lançamentos em JSON</h5>
+          </div>
+          <button class="btnGreen"><i class="fa-solid fa-arrow-down"></i>Exportar</button>
+        </div>
+        <div class="config">
+          <div class="infoConfig">
+            <p>Limpar dados do mês atual</p>
+            <h5>Remove todos os lançamentos de maio 2026</h5>
+          </div>
+          <button id="btnDeleteMes" class="btnDel">Limpar mês</button>
+        </div>
+        <div class="config">
+          <div class="infoConfig">
+            <p>Resetar tudo</p>
+            <h5>Remove todos os dados permanentemente</h5>
+          </div>
+          <button id="btnDeleteAll" class="btnDel">Resetar app</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Sobre</h3>
+        <div class="config">
+          <p>Versão</p>
+          <h5>Finno v1.0.0</h5>
+        </div>
+        <div class="config">
+          <p>Desenvolvido por</p>
+          <h5>Jônatas Emanuel Batista</h5>
+        </div>
+      </div>
     </section>
 
     <script type="module" src="./js/app.js"></script>

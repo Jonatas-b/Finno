@@ -1,0 +1,73 @@
+#configuracoes div h3 {
+  border-bottom: solid 1px var(--card-border);
+}
+
+.config {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.configBtnSalvar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#btnSalvarInfoUser {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--semi-transparent-bg);
+  color: var(--destaque);
+  border: 1px solid var(--destaque);
+  width: 12%;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+}
+
+#btnSalvarInfoUser:hover {
+  background: rgba(59, 109, 17, 0.3);
+  color: var(--destaque);
+  border: 1px solid var(--destaque);
+  cursor: pointer;
+}
+
+
+.infoConfig {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.btnGreen, .btnDel {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--card);
+  color: var(--texto);
+  border: var(--card-border);
+  width: 15%;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+}
+
+.btnGreen:hover, .btnDel:hover {
+  border: solid 1px var(--destaque);
+  color: var(--destaque);
+  cursor: pointer;
+}
+
+.btnDel {
+  background: var(--semi-transparent-bg-negativo);
+  color: var(--negativo);
+  border: 1px solid var(--negativo);
+  width: 12%;
+}
+
+.btnDel:hover {
+  background: rgba(248, 113, 113, 0.3);
+  color: var(--negativo);
+  border: 1px solid var(--negativo);
+}

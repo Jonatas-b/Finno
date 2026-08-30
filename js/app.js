@@ -1,32 +1,75 @@
 import { trocaTela } from "./router.js";
+import { capitalizar } from "./utils/texto.js";
+import { formatarComoMoeda, desformatarMoeda } from "./utils/moeda.js";
+import { carregarUsuario, getUserConfig, atualizarDadosUsuario } from "./modules/usuario.js";
+import { lancarDespeza, carregarLancamentos, renderizarResumo } from "./modules/transacoes.js";
+import { toggleTema } from "./modules/tema.js";
 
-const button = document.getElementById('toggleBg');
+function atualizarInfos() {
+  carregarUsuario();
+  const userConfig = getUserConfig();
 
-button.addEventListener('click', () => {
-
-  const toggle = document.getElementById('slider');
-
-  // Adiciona classe ativa ao butão e slider de troca de tema
-  button.classList.toggle('btn-toggle-active');
-  toggle.classList.toggle('switch-toggle-active');
-
-  // Muda para as configurações Dark Mode
-  document.documentElement.classList.toggle("dark");
-
-  // Muda o nome do tema 
-  if (button.classList.contains('btn-toggle-active')) {
-    document.getElementById('theme-name').innerText = 'Dark Mode';
-  } else {
-    document.getElementById('theme-name').innerText = 'Light Mode';
+  if (userConfig.tema == "dark") {
+    document.documentElement.classList.add("dark");
   }
-  
-  // Muda o ícone do tema
-  if (button.classList.contains('btn-toggle-active')) {
-    document.getElementById('theme-icon').classList.add('fa-moon');
-  } else {
-    document.getElementById('theme-icon').classList.remove('fa-moon');
-    document.getElementById('theme-icon').classList.add('fa-sun');
-  }
-});
 
+  document.getElementById("saudacaoNome").innerText = `Olá, ${capitalizar(userConfig.nome)}`;
+  document.getElementById("inputName").value = capitalizar(userConfig.nome);
+  document.getElementById("salario").innerText = `${formatarComoMoeda(userConfig.salario)}`;
+  if (localStorage.length >= 1) document.getElementById("inputSalario").value = userConfig.salario;
+
+  function selecionarPorTexto() {
+    const select = document.getElementById("inputAlerta");
+    const textoProcurado = userConfig.alerta;
+    for (let i = 0; i < select.options.length; i++) {
+      if (select.options[i].text === textoProcurado) {
+        select.selectedIndex = i;
+        break;
+      }
+    }
+  }
+  selecionarPorTexto();
+}
+
+function pegarInformacoesDoUser() {
+
+  document.getElementById("inputSalario").addEventListener("input", function (evento) {
+    let apenasDigitos = evento.target.value.replace(/\D/g, "");
+    let valorEmReais = Number(apenasDigitos) / 100;
+    evento.target.value = valorEmReais.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+  });
+
+  document.getElementById("btnSalvarInfoUser").addEventListener('click', function () {
+    let userName = document.getElementById("inputName").value.trim();
+    let salario = document.getElementById("inputSalario").value.trim();
+    let alertaComprometimento = document.getElementById("inputAlerta").value.trim();
+
+    atualizarDadosUsuario({
+      nome: userName,
+      salario: desformatarMoeda(salario),
+      alerta: alertaComprometimento
+    });
+
+    atualizarInfos();
+  });
+}
+
+function limparTodosDados() {
+  document.getElementById("btnDeleteAll").addEventListener('click', function () {
+    localStorage.clear();
+    location.reload(true);
+  });
+}
+
+// Inicialização
 trocaTela();
+toggleTema();
+atualizarInfos();
+pegarInformacoesDoUser();
+limparTodosDados();
+lancarDespeza();
+carregarLancamentos();
+renderizarResumo();
