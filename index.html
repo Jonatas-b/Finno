@@ -76,12 +76,12 @@
     <section class="dashboard active" id="dashboard">
       <div class="dashboard-top">
         <div class="title">
-          <h1 id="saudacaoNome"></h1>
-          <p>Resumo de Maio de 2026</p>
+          <h1 id="saudacaoNome"></h1> <!-- Nome inserido com JavaScript -->
+          <p id="msgMesAno"></p>
         </div>
         <div class="toggle-mes">
           <button><i class="fa-solid fa-angle-left"></i></button>
-          <p>Ago / 2026</p>
+          <p id="mesAbreviado"></p>
           <button><i class="fa-solid fa-angle-right"></i></button>
         </div>
       </div>
@@ -99,26 +99,26 @@
       </div>
       <div class="card">
         <h5>TOTAL GASTO</h5>
-        <h4><em>R$ 0,00</em></h4>
+        <h4><em id="totalGasto">R$ 0,00</em></h4>
         <!-- <b class=" negativo-info">porcentagem a mais ou a menos em relação ao mês anterior</b> -->
       </div>
       <div class="card">
         <h5>SALDO RESTANTE</h5>
-        <h4><em>R$ 0,00</em></h4>
+        <h4><em id="saldoRestante">R$ 0,00</em></h4>
         <!-- <b>porcentagem do salário que ainda resta</b> -->
       </div>
     </div>
       
-      <!-- <div class="card projecao">
+      <div class="card projecao">
         <div class="title">
           <h3>Comprometimento do salário</h3>
-          <p>76% utilizado</p>
+          <p id="percentualUtilizado">76% utilizado</p>
         </div>
         <div class="bar-bg">
-          <div class="bar"></div>
+          <div class="bar" id="barraMetaPercentual"></div>
         </div>
-        <p class="info">Meta: manter abaixo de 70% · Projeção: R$ 950 ao final do mês</p>
-      </div> -->
+        <p class="info" id="mensagemAlerta">Meta: manter abaixo de 70% · Projeção: R$ 950 ao final do mês</p>
+      </div>
 
       <div class="half">
         <div class="card">
@@ -131,7 +131,7 @@
                 <th>VALOR</th>
               </tr>
             </thead>
-            <tbody id="tabelaResumo">
+            <tbody id="tabelaResumo"> <!-- Elementos inseridos com JavaScript  -->
             </tbody>
           </table>
         </div>
@@ -151,8 +151,8 @@
       <div class="card">
         <h3>Novo lançamento</h3>
         <div class="buttons">
-          <p class="despeza"><i class="fa-solid fa-arrow-down"></i> Despezas</p>
-          <p class="receita"><i class="fa-solid fa-arrow-up"></i> Receita</p>
+          <button class="despeza active" id="btnDespesa"><i class="fa-solid fa-arrow-down"></i> Despezas</button>
+          <button class="receita" id="btnReceita"><i class="fa-solid fa-arrow-up"></i> Receita</button>
         </div>
 
         <div class="lacamento-config">
@@ -174,7 +174,7 @@
               <option value="lazer">Lazer</option>
               <option value="educacao">Educação</option>
               <option value="vestuario">Vestuário</option>
-              <option value="receita">Receita</option>
+              <!-- <option value="receita">Receita</option> -->
               <option value="outros">Outros</option>
             </select>
           </div>
@@ -186,13 +186,8 @@
             <label for="type">TIPO</label>
             <select id="type" class="input">
               <option value="unica">Única</option>
+              <option value="mensal">Semanal</option>
               <option value="mensal">Mensal</option>
-            </select>
-          </div>
-          <div class="inputAndLabel">
-            <label for="recorrencia">RECORRÊNCIA</label>
-            <select id="recorrencia" class="input">
-              <option value="naoRepete">Não repete</option>
             </select>
           </div>          
         </div>
@@ -203,7 +198,7 @@
         </div>
       </div>
       <div class="card">
-            <h3>Maio 2026</h3>
+            <h3 id="nomeMesTabela">Maio 2026</h3>
 
             <table>
             <thead>
@@ -226,7 +221,7 @@
     <section class="analise" id="analise">
       <div class="title">
         <h2>Análise</h2>
-        <p>Maio 2026 · gráficos e recomendações</p>
+        <p id="dataAtualAnalise"></p>
       </div>
 
       <div class="half">
@@ -335,7 +330,7 @@
       <div class="cards">
         <div class="card">
           <h5>SALÁRIO</h5>
-          <h4><em>R$ 5.000</em></h4>
+          <h4><em id="salarioHistorico"></em></h4>
           <b>fixo</b>
         </div>
         <div class="card">
@@ -351,7 +346,7 @@
       </div>
 
       <div class="card">
-            <h3>Maio 2026</h3>
+            <h3 id="mesAtualTabelaHistorico">Maio 2026</h3>
 
             <table>
             <thead>

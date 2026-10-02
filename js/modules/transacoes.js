@@ -1,14 +1,17 @@
 import { categorias } from "../utils/categorias.js";
+import { capitalizar } from "../utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "../utils/moeda.js";
 import { getUserConfig, carregarUsuario, adicionarTransacao } from "./usuario.js";
+import { converterParaFormatoBR, exibirDataAtual } from "../utils/data.js";
+import { somarValores } from "../utils/filtros.js";
 
 export function criarLinhaTabela(transacao) {
   document.getElementById("tabelaLancamentos").insertAdjacentHTML("beforeend", `
     <tr>
-      <td>${transacao.descricao}</td>
+      <td>${capitalizar(transacao.descricao)}</td>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias[transacao.categoria].cor}"></i>${categorias[transacao.categoria].label}</td>
-      <td>${transacao.data}</td>
-      <td>${transacao.tipo}</td>
+      <td>${converterParaFormatoBR(transacao.data)}</td>
+      <td>${capitalizar(transacao.tipo)}</td>
       <td>${formatarComoMoeda(transacao.valor)}</td>
       <td><div><button>Editar</button><button>Excluir</button><div></td>
     </tr>
@@ -18,7 +21,7 @@ export function criarLinhaTabela(transacao) {
 export function criarLinhaTabelaResumo(transacao) {
   document.getElementById("tabelaResumo").insertAdjacentHTML("beforeend", `
     <tr>
-      <td>${transacao.descricao}</td>
+      <td>${capitalizar(transacao.descricao)}</td>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias[transacao.categoria].cor}"></i>${categorias[transacao.categoria].label}</td>
       <td>${formatarComoMoeda(transacao.valor)}</td>
     </tr>
@@ -29,7 +32,7 @@ export function renderizarResumo() {
   document.getElementById("tabelaResumo").innerHTML = "";
 
   const userConfig = getUserConfig();
-  const ultimosLancamentos = userConfig.transacoes.slice(-4);
+  const ultimosLancamentos = userConfig.transacoes.slice(-4).reverse();
 
   if (ultimosLancamentos.length === 0) {
     document.getElementById("tabelaResumo").insertAdjacentHTML("beforeend", `
@@ -70,7 +73,6 @@ export function lancarDespeza() {
     let lancamentoCategoria = document.getElementById("category").value.trim();
     let lancamentoData = document.getElementById("date").value.trim();
     let lancamentoTipo = document.getElementById("type").value.trim();
-    let lancamentoRecorrencia = document.getElementById("recorrencia").value.trim();
 
     if (lancamentoDescricao === "" || lancamentoValor === "" || lancamentoData === "") {
       alert("Preencha todos os campos obrigatórios.");
@@ -84,7 +86,6 @@ export function lancarDespeza() {
       categoria: lancamentoCategoria,
       data: lancamentoData,
       tipo: lancamentoTipo,
-      recorrencia: lancamentoRecorrencia
     };
 
     adicionarTransacao(novaTransacao);
@@ -95,4 +96,26 @@ export function lancarDespeza() {
     document.getElementById("value").value = "";
     document.getElementById("date").value = "";
   });
+}
+
+export function percentualComprometido () {
+  const userConfig = getUserConfig();
+  const metaPercentual = userConfig.alerta;
+  const percentualUtilizado = (somarValores(exibirDataAtual()) / userConfig.salario) * 100;
+
+  const graficoBarra = document.getElementById('barraMetaPercentual');
+  const msgPercentualUtilizado = document.getElementById('percentualUtilizado');
+
+  document.getElementById('mensagemAlerta').innerText = `Meta: manter abaixo de ${metaPercentual}`;
+  graficoBarra.style.width = `${percentualUtilizado}%`;
+  msgPercentualUtilizado.innerText = `${Math.round(percentualUtilizado)}% utilizado`;
+
+  if(percentualUtilizado <= parseInt(metaPercentual)) {
+    graficoBarra.style.background = "var(--destaque)";
+    msgPercentualUtilizado.style.color = "var(--destaque)";
+  } else {
+    graficoBarra.style.background = "var(--negativo)";
+    msgPercentualUtilizado.style.color = "var(--negativo)";
+  }
+
 }

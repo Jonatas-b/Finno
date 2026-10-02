@@ -2,8 +2,10 @@ import { trocaTela } from "./router.js";
 import { capitalizar } from "./utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "./utils/moeda.js";
 import { carregarUsuario, getUserConfig, atualizarDadosUsuario } from "./modules/usuario.js";
-import { lancarDespeza, carregarLancamentos, renderizarResumo } from "./modules/transacoes.js";
+import { lancarDespeza, carregarLancamentos, renderizarResumo, percentualComprometido } from "./modules/transacoes.js";
 import { toggleTema } from "./modules/tema.js";
+import { exibirDataAtual } from "./utils/data.js";
+import { filtrarDespesasDoMes, somarValores, somarValoresReceitas } from "./utils/filtros.js";
 
 function atualizarInfos() {
   carregarUsuario();
@@ -13,10 +15,20 @@ function atualizarInfos() {
     document.documentElement.classList.add("dark");
   }
 
+  document.getElementById('totalGasto').innerText = formatarComoMoeda(somarValores(exibirDataAtual()));
+
+  const saldoRestante = (userConfig.salario - somarValores(exibirDataAtual())) + somarValoresReceitas(exibirDataAtual());;
+  document.getElementById('saldoRestante').innerText = formatarComoMoeda(saldoRestante);
+
+  if (saldoRestante < 0) {
+    document.getElementById('saldoRestante').style.color = "var(--negativo)";
+  }
+
   document.getElementById("saudacaoNome").innerText = `Olá, ${capitalizar(userConfig.nome)}`;
   document.getElementById("inputName").value = capitalizar(userConfig.nome);
   document.getElementById("salario").innerText = `${formatarComoMoeda(userConfig.salario)}`;
-  if (localStorage.length >= 1) document.getElementById("inputSalario").value = userConfig.salario;
+  document.getElementById("salarioHistorico").innerText = `${formatarComoMoeda(userConfig.salario)}`;
+  if (localStorage.length >= 1) document.getElementById("inputSalario").value = formatarComoMoeda(userConfig.salario);
 
   function selecionarPorTexto() {
     const select = document.getElementById("inputAlerta");
@@ -57,12 +69,40 @@ function pegarInformacoesDoUser() {
   });
 }
 
+function trocarTipoLancamento () {
+  const btnDespesa = document.getElementById('btnDespesa');
+  const btnReceita = document.getElementById('btnReceita');
+
+  btnReceita.addEventListener('click', function () {
+    document.getElementById('btnReceita').classList.add('active');
+    document.getElementById('btnDespesa').classList.remove('active');
+    
+    document.getElementById('category').insertAdjacentHTML("beforeend", `<option value="receita">Receita</option>`);
+    document.getElementById('category').value = "receita";
+    document.getElementById('category').disabled = true;
+    
+  })
+  btnDespesa.addEventListener('click', function () {
+    document.getElementById('btnDespesa').classList.add('active');
+    document.getElementById('btnReceita').classList.remove('active');
+
+    document.getElementById('category').value = 'alimentacao';
+    document.getElementById('category').disabled = false;
+    
+
+    const ultima = document.getElementById('category').options[document.getElementById('category').options.length - 1];
+    if (ultima?.value === "receita") ultima.remove();
+  })
+
+}
+
 function limparTodosDados() {
   document.getElementById("btnDeleteAll").addEventListener('click', function () {
     localStorage.clear();
     location.reload(true);
   });
 }
+
 
 // Inicialização
 trocaTela();
@@ -73,3 +113,9 @@ limparTodosDados();
 lancarDespeza();
 carregarLancamentos();
 renderizarResumo();
+exibirDataAtual();
+trocarTipoLancamento();
+percentualComprometido();
+
+filtrarDespesasDoMes();
+somarValores(exibirDataAtual);
