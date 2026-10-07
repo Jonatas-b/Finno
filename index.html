@@ -105,14 +105,14 @@
       <div class="card">
         <h5>SALDO RESTANTE</h5>
         <h4><em id="saldoRestante">R$ 0,00</em></h4>
-        <!-- <b>porcentagem do salário que ainda resta</b> -->
+        <b id="percentualSalarioRestante"></b>
       </div>
     </div>
       
       <div class="card projecao">
         <div class="title">
           <h3>Comprometimento do salário</h3>
-          <p id="percentualUtilizado">76% utilizado</p>
+          <p id="percentualUtilizado">0% utilizado</p>
         </div>
         <div class="bar-bg">
           <div class="bar" id="barraMetaPercentual"></div>
@@ -228,7 +228,7 @@
         <div class="card">
           <h3>Gastos por categoria</h3>
           <table>
-            <tbody>
+            <tbody id="tabelaGastosPorCategoria">
               <tr>
                 <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
                 <td>R$ 340</td>
@@ -312,6 +312,7 @@
           <input class="input" type="month" >
 
           <select class="input">
+            <option value="todos">Todas categorias</option>
             <option value="alimentacao">Alimentação</option>
             <option value="moradia">Moradia</option>
             <option value="transporte">Transporte</option>
@@ -323,8 +324,8 @@
             <option value="lazer">Outros</option>
           </select>
 
-          <button class="input"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button>
-          <button class="input"><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button>
+          <!-- <button class="input"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button>
+          <button class="input"><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button> -->
       </div>
         
       <div class="cards">
@@ -335,13 +336,13 @@
         </div>
         <div class="card">
           <h5>TOTAL GASTO</h5>
-          <h4><em>R$ 3.800</em></h4>
+          <h4><em id="totalGastoHistorico">R$ 3.800</em></h4>
           <b class=" negativo-info">8% vs abr</b>
         </div>
         <div class="card">
           <h5>SALDO RESTANTE</h5>
-          <h4><em>R$ 1.200</em></h4>
-          <b>12%</b>
+          <h4><em id="saldoRestanteHistorico">R$ 1.200</em></h4>
+          <b id="percentualSalarioRestanteHistorico">12%</b>
         </div>
       </div>
 

@@ -4,21 +4,30 @@ import { formatarComoMoeda, desformatarMoeda } from "./utils/moeda.js";
 import { carregarUsuario, getUserConfig, atualizarDadosUsuario } from "./modules/usuario.js";
 import { lancarDespeza, carregarLancamentos, renderizarResumo, percentualComprometido } from "./modules/transacoes.js";
 import { toggleTema } from "./modules/tema.js";
-import { exibirDataAtual } from "./utils/data.js";
-import { filtrarDespesasDoMes, somarValores, somarValoresReceitas } from "./utils/filtros.js";
+import { exibirDataAtual, obterMesAtual } from "./utils/data.js";
+import { filtrarPorMesETipo, somarValores } from "./modules/filtros.js";
+import { categorias } from "./utils/categorias.js";
 
 function atualizarInfos() {
   carregarUsuario();
   const userConfig = getUserConfig();
 
+  const mesAtual = obterMesAtual();
+  const despesasMes = filtrarPorMesETipo(mesAtual, "despesa");
+  const receitasMes = filtrarPorMesETipo(mesAtual, "receita");
+  const totalGasto = somarValores(despesasMes);
+  const totalReceita = somarValores(receitasMes);
+
   if (userConfig.tema == "dark") {
     document.documentElement.classList.add("dark");
   }
 
-  document.getElementById('totalGasto').innerText = formatarComoMoeda(somarValores(exibirDataAtual()));
+  document.getElementById('totalGasto').innerText = formatarComoMoeda(totalGasto);
+  document.getElementById('totalGastoHistorico').innerText = formatarComoMoeda(totalGasto);
 
-  const saldoRestante = (userConfig.salario - somarValores(exibirDataAtual())) + somarValoresReceitas(exibirDataAtual());;
+  const saldoRestante = (userConfig.salario - totalGasto + totalReceita);
   document.getElementById('saldoRestante').innerText = formatarComoMoeda(saldoRestante);
+  document.getElementById('saldoRestanteHistorico').innerText = formatarComoMoeda(saldoRestante);
 
   if (saldoRestante < 0) {
     document.getElementById('saldoRestante').style.color = "var(--negativo)";
@@ -41,6 +50,45 @@ function atualizarInfos() {
     }
   }
   selecionarPorTexto();
+
+  document.getElementById('tabelaGastosPorCategoria').innerHTML = `
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.alimentacao.cor}"></i>Alimentação</td>
+      <td>-R$ 0</td>
+    </tr>
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.moradia.cor}"></i>Moradia</td>
+      <td>-R$ 0</td>
+    </tr>
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.transporte.cor}"></i>Transporte</td>
+      <td>-R$ 0</td>
+    </tr>
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.lazer.cor}"></i>Lazer</td>
+      <td>-R$ 0</td>
+    </tr>
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.saude.cor}"></i>Saúde</td>
+      <td>-R$ 0</td>
+    </tr>
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.educacao.cor}"></i>Educação</td>
+      <td>-R$ 0</td>
+    </tr>
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.vestuario.cor}"></i>Vestuário</td>
+      <td>-R$ 0</td>
+    </tr>
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.outros.cor}"></i>Outros</td>
+      <td>-R$ 0</td>
+    </tr>
+    <tr>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.receita.cor}"></i>Receita</td>
+      <td style="color: var(--destaque)">R$ 0</td>
+    </tr>
+  `;
 }
 
 function pegarInformacoesDoUser() {
@@ -116,6 +164,3 @@ renderizarResumo();
 exibirDataAtual();
 trocarTipoLancamento();
 percentualComprometido();
-
-filtrarDespesasDoMes();
-somarValores(exibirDataAtual);

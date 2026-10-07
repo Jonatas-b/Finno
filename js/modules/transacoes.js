@@ -2,8 +2,8 @@ import { categorias } from "../utils/categorias.js";
 import { capitalizar } from "../utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "../utils/moeda.js";
 import { getUserConfig, carregarUsuario, adicionarTransacao } from "./usuario.js";
-import { converterParaFormatoBR, exibirDataAtual } from "../utils/data.js";
-import { somarValores } from "../utils/filtros.js";
+import { converterParaFormatoBR, obterMesAtual } from "../utils/data.js";
+import { filtrarPorMesETipo, somarValores } from "./filtros.js";
 
 export function criarLinhaTabela(transacao) {
   document.getElementById("tabelaLancamentos").insertAdjacentHTML("beforeend", `
@@ -49,6 +49,13 @@ export function renderizarResumo() {
 export function carregarLancamentos() {
   carregarUsuario();
   const userConfig = getUserConfig();
+
+  if (userConfig.transacoes.length === 0) {
+    document.getElementById("tabelaLancamentos").insertAdjacentHTML("beforeend", `
+      <tr><td colspan="6">Nenhum lançamento ainda.</td></tr>
+    `);
+    return;
+  }
 
   userConfig.transacoes.forEach(function (elemento) {
     criarLinhaTabela(elemento);
@@ -101,7 +108,31 @@ export function lancarDespeza() {
 export function percentualComprometido () {
   const userConfig = getUserConfig();
   const metaPercentual = userConfig.alerta;
-  const percentualUtilizado = (somarValores(exibirDataAtual()) / userConfig.salario) * 100;
+
+  const mesAtual = obterMesAtual(); 
+  const despesasMes = filtrarPorMesETipo(mesAtual, "despesa");
+  const totalGasto = somarValores(despesasMes);
+  const percentualUtilizado = (totalGasto / userConfig.salario) * 100;
+
+  if (isNaN(percentualUtilizado)) {
+    percentualUtilizado = 0;
+  }
+
+  // Exibir Percentual Restante no Dashboard 
+  const percentualSalarioRestante = 100 - Math.round(percentualUtilizado);
+  document.getElementById('percentualSalarioRestante').innerText = `${percentualSalarioRestante}% restante`;
+  if (percentualSalarioRestante < (100 - parseInt((metaPercentual)))) {
+    document.getElementById('percentualSalarioRestante').style.color = "var(--negativo)";
+    document.getElementById('percentualSalarioRestante').style.background = "var(--semi-transparent-bg-negativo)";
+  }
+
+  // Exibir Percentual Restante no Histórico
+  document.getElementById('percentualSalarioRestanteHistorico').innerText = `${percentualSalarioRestante}% restante`;
+  if (percentualSalarioRestante < (100 - parseInt((metaPercentual)))) {
+    document.getElementById('percentualSalarioRestanteHistorico').style.color = "var(--negativo)";
+    document.getElementById('percentualSalarioRestanteHistorico').style.background = "var(--semi-transparent-bg-negativo)";
+  }
+
 
   const graficoBarra = document.getElementById('barraMetaPercentual');
   const msgPercentualUtilizado = document.getElementById('percentualUtilizado');
@@ -117,5 +148,6 @@ export function percentualComprometido () {
     graficoBarra.style.background = "var(--negativo)";
     msgPercentualUtilizado.style.color = "var(--negativo)";
   }
+
 
 }
