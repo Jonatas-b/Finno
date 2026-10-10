@@ -5,18 +5,30 @@ import { carregarUsuario, getUserConfig, atualizarDadosUsuario } from "./modules
 import { lancarDespeza, carregarLancamentos, renderizarResumo, percentualComprometido } from "./modules/transacoes.js";
 import { toggleTema } from "./modules/tema.js";
 import { exibirDataAtual, obterMesAtual } from "./utils/data.js";
-import { filtrarPorMesETipo, somarValores } from "./modules/filtros.js";
+import { categoriaReceita, filtrarPorMes, filtrarPorCategoria, filtrarReceitas, filtrarDespesas, somarValores } from "./modules/filtros.js";
 import { categorias } from "./utils/categorias.js";
 
 function atualizarInfos() {
   carregarUsuario();
   const userConfig = getUserConfig();
+  
+  const transacoes = getUserConfig().transacoes;
+  const doMes = filtrarPorMes(transacoes, obterMesAtual());
 
-  const mesAtual = obterMesAtual();
-  const despesasMes = filtrarPorMesETipo(mesAtual, "despesa");
-  const receitasMes = filtrarPorMesETipo(mesAtual, "receita");
-  const totalGasto = somarValores(despesasMes);
-  const totalReceita = somarValores(receitasMes);
+  const despesas = filtrarDespesas(doMes);
+  const receitas = filtrarReceitas(doMes);
+  
+  const totalGasto = somarValores(despesas);
+  const totalReceita = somarValores(receitas);
+
+  const totalAlimentacao = somarValores(filtrarPorCategoria(despesas, "alimentacao"));
+  const totalMoradia = somarValores(filtrarPorCategoria(despesas, "moradia"));
+  const totalTransporte = somarValores(filtrarPorCategoria(despesas, "transporte"));
+  const totalLazer = somarValores(filtrarPorCategoria(despesas, "lazer"));
+  const totalEducacao = somarValores(filtrarPorCategoria(despesas, "educacao"));
+  const totalSaude = somarValores(filtrarPorCategoria(despesas, "saude"));
+  const totalVestuario = somarValores(filtrarPorCategoria(despesas, "vestuario"));
+  const totalOutros = somarValores(filtrarPorCategoria(despesas, "outros"));
 
   if (userConfig.tema == "dark") {
     document.documentElement.classList.add("dark");
@@ -54,39 +66,39 @@ function atualizarInfos() {
   document.getElementById('tabelaGastosPorCategoria').innerHTML = `
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.alimentacao.cor}"></i>Alimentação</td>
-      <td>-R$ 0</td>
+      <td>- ${formatarComoMoeda(totalAlimentacao)}</td>
     </tr>
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.moradia.cor}"></i>Moradia</td>
-      <td>-R$ 0</td>
+      <td>- ${formatarComoMoeda(totalMoradia)}</td>
     </tr>
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.transporte.cor}"></i>Transporte</td>
-      <td>-R$ 0</td>
+      <td>- ${formatarComoMoeda(totalTransporte)}</td>
     </tr>
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.lazer.cor}"></i>Lazer</td>
-      <td>-R$ 0</td>
+      <td>- ${formatarComoMoeda(totalLazer)}</td>
     </tr>
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.saude.cor}"></i>Saúde</td>
-      <td>-R$ 0</td>
+      <td>- ${formatarComoMoeda(totalSaude)}</td>
     </tr>
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.educacao.cor}"></i>Educação</td>
-      <td>-R$ 0</td>
+      <td>- ${formatarComoMoeda(totalEducacao)}</td>
     </tr>
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.vestuario.cor}"></i>Vestuário</td>
-      <td>-R$ 0</td>
+      <td>- ${formatarComoMoeda(totalVestuario)}</td>
     </tr>
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.outros.cor}"></i>Outros</td>
-      <td>-R$ 0</td>
+      <td>- ${formatarComoMoeda(totalOutros)}</td>
     </tr>
     <tr>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.receita.cor}"></i>Receita</td>
-      <td style="color: var(--destaque)">R$ 0</td>
+      <td style="color: var(--destaque)">+ ${formatarComoMoeda(totalReceita)}</td>
     </tr>
   `;
 }
@@ -137,6 +149,7 @@ function trocarTipoLancamento () {
     document.getElementById('category').value = 'alimentacao';
     document.getElementById('category').disabled = false;
     
+
 
     const ultima = document.getElementById('category').options[document.getElementById('category').options.length - 1];
     if (ultima?.value === "receita") ultima.remove();

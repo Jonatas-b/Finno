@@ -3,15 +3,17 @@ import { capitalizar } from "../utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "../utils/moeda.js";
 import { getUserConfig, carregarUsuario, adicionarTransacao } from "./usuario.js";
 import { converterParaFormatoBR, obterMesAtual } from "../utils/data.js";
-import { filtrarPorMesETipo, somarValores } from "./filtros.js";
+import { filtrarPorMes, filtrarDespesas, somarValores } from "./filtros.js";
 
-export function criarLinhaTabela(transacao) {
+// EXIBIR AS LINHAS DAS TABELAS DE LANÇAMENTO, RESUMO NO DASHBOARD E HISTÓRICO
+
+export function criarLinhaTabelaLancamentos(transacao) {
   document.getElementById("tabelaLancamentos").insertAdjacentHTML("beforeend", `
     <tr>
       <td>${capitalizar(transacao.descricao)}</td>
       <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias[transacao.categoria].cor}"></i>${categorias[transacao.categoria].label}</td>
       <td>${converterParaFormatoBR(transacao.data)}</td>
-      <td>${capitalizar(transacao.tipo)}</td>
+      <td>${capitalizar(transacao.recorrencia)}</td>
       <td>${formatarComoMoeda(transacao.valor)}</td>
       <td><div><button>Editar</button><button>Excluir</button><div></td>
     </tr>
@@ -28,11 +30,24 @@ export function criarLinhaTabelaResumo(transacao) {
   `);
 }
 
+export function criarLinhaTabelaHistorico(transacao) {
+  document.getElementById("tabelaLancamentosHistorico").insertAdjacentHTML("beforeend", `
+    <tr>
+      <td>${capitalizar(transacao.descricao)}</td>
+      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias[transacao.categoria].cor}"></i>${categorias[transacao.categoria].label}</td>
+      <td>${converterParaFormatoBR(transacao.data)}</td>
+      <td>${capitalizar(transacao.recorrencia)}</td>
+      <td>${formatarComoMoeda(transacao.valor)}</td>
+    </tr>
+  `);
+}
+
 export function renderizarResumo() {
   document.getElementById("tabelaResumo").innerHTML = "";
 
   const userConfig = getUserConfig();
-  const ultimosLancamentos = userConfig.transacoes.slice(-4).reverse();
+  const lancamentosDoMes = filtrarPorMes(userConfig.transacoes, obterMesAtual());
+  const ultimosLancamentos = lancamentosDoMes.slice(-4).reverse();
 
   if (ultimosLancamentos.length === 0) {
     document.getElementById("tabelaResumo").insertAdjacentHTML("beforeend", `
@@ -54,17 +69,25 @@ export function carregarLancamentos() {
     document.getElementById("tabelaLancamentos").insertAdjacentHTML("beforeend", `
       <tr><td colspan="6">Nenhum lançamento ainda.</td></tr>
     `);
+
+    document.getElementById("tabelaLancamentosHistorico").insertAdjacentHTML("beforeend", `
+      <tr><td colspan="5">Nenhum lançamento ainda.</td></tr>
+    `);
     return;
   }
 
-  userConfig.transacoes.forEach(function (elemento) {
-    criarLinhaTabela(elemento);
+  const lancamentosDoMes = filtrarPorMes(userConfig.transacoes, obterMesAtual());
+
+  lancamentosDoMes.forEach(function (elemento) {
+    criarLinhaTabelaLancamentos(elemento);
+    criarLinhaTabelaHistorico(elemento);
   });
 }
 
 export function lancarDespeza() {
   carregarUsuario();
 
+  // Formata número para valor em Reais ao digitar
   document.getElementById("value").addEventListener("input", function (evento) {
     let apenasDigitos = evento.target.value.replace(/\D/g, "");
     let valorEmReais = Number(apenasDigitos) / 100;
@@ -79,7 +102,7 @@ export function lancarDespeza() {
     let lancamentoValor = document.getElementById("value").value.trim();
     let lancamentoCategoria = document.getElementById("category").value.trim();
     let lancamentoData = document.getElementById("date").value.trim();
-    let lancamentoTipo = document.getElementById("type").value.trim();
+    let lancamentoRecorrencia = document.getElementById("recorrencia").value.trim();
 
     if (lancamentoDescricao === "" || lancamentoValor === "" || lancamentoData === "") {
       alert("Preencha todos os campos obrigatórios.");
@@ -92,12 +115,13 @@ export function lancarDespeza() {
       valor: desformatarMoeda(lancamentoValor),
       categoria: lancamentoCategoria,
       data: lancamentoData,
-      tipo: lancamentoTipo,
+      recorrencia: lancamentoRecorrencia,
     };
 
     adicionarTransacao(novaTransacao);
-    criarLinhaTabela(novaTransacao);
+    criarLinhaTabelaLancamentos(novaTransacao);
     renderizarResumo();
+    criarLinhaTabelaHistorico();
 
     document.getElementById("description").value = "";
     document.getElementById("value").value = "";
@@ -109,10 +133,12 @@ export function percentualComprometido () {
   const userConfig = getUserConfig();
   const metaPercentual = userConfig.alerta;
 
-  const mesAtual = obterMesAtual(); 
-  const despesasMes = filtrarPorMesETipo(mesAtual, "despesa");
-  const totalGasto = somarValores(despesasMes);
-  const percentualUtilizado = (totalGasto / userConfig.salario) * 100;
+  const transacoes = getUserConfig().transacoes;
+
+  const doMes = filtrarPorMes(transacoes, obterMesAtual());
+  const despesas = filtrarDespesas(doMes);
+  const totalGasto = somarValores(despesas);
+  let percentualUtilizado = (totalGasto / userConfig.salario) * 100;
 
   if (isNaN(percentualUtilizado)) {
     percentualUtilizado = 0;
@@ -121,18 +147,17 @@ export function percentualComprometido () {
   // Exibir Percentual Restante no Dashboard 
   const percentualSalarioRestante = 100 - Math.round(percentualUtilizado);
   document.getElementById('percentualSalarioRestante').innerText = `${percentualSalarioRestante}% restante`;
-  if (percentualSalarioRestante < (100 - parseInt((metaPercentual)))) {
+  if (percentualSalarioRestante <= (100 - parseInt((metaPercentual)))) {
     document.getElementById('percentualSalarioRestante').style.color = "var(--negativo)";
     document.getElementById('percentualSalarioRestante').style.background = "var(--semi-transparent-bg-negativo)";
   }
 
   // Exibir Percentual Restante no Histórico
   document.getElementById('percentualSalarioRestanteHistorico').innerText = `${percentualSalarioRestante}% restante`;
-  if (percentualSalarioRestante < (100 - parseInt((metaPercentual)))) {
+  if (percentualSalarioRestante <= (100 - parseInt((metaPercentual)))) {
     document.getElementById('percentualSalarioRestanteHistorico').style.color = "var(--negativo)";
     document.getElementById('percentualSalarioRestanteHistorico').style.background = "var(--semi-transparent-bg-negativo)";
   }
-
 
   const graficoBarra = document.getElementById('barraMetaPercentual');
   const msgPercentualUtilizado = document.getElementById('percentualUtilizado');
@@ -141,6 +166,7 @@ export function percentualComprometido () {
   graficoBarra.style.width = `${percentualUtilizado}%`;
   msgPercentualUtilizado.innerText = `${Math.round(percentualUtilizado)}% utilizado`;
 
+   // Exibir Percentual Restante no card da barra 
   if(percentualUtilizado <= parseInt(metaPercentual)) {
     graficoBarra.style.background = "var(--destaque)";
     msgPercentualUtilizado.style.color = "var(--destaque)";
@@ -148,6 +174,4 @@ export function percentualComprometido () {
     graficoBarra.style.background = "var(--negativo)";
     msgPercentualUtilizado.style.color = "var(--negativo)";
   }
-
-
 }

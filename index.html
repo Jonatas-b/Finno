@@ -63,13 +63,6 @@
           <p>Configurações</p>
         </div>
       </div>
-      <!-- <div class="theme">
-        <i class="fa-solid fa-sun" id="theme-icon"></i>
-        <p  id="theme-name">Light Mode</p>
-        <button class="toggle-theme-bg" id="toggleBg">
-          <div class="toggle-theme-switch" id="slider"></div>
-        </button>
-      </div> -->
     </nav>
 
     <!-- SEÇÂO DASHBOARD -->
@@ -78,11 +71,6 @@
         <div class="title">
           <h1 id="saudacaoNome"></h1> <!-- Nome inserido com JavaScript -->
           <p id="msgMesAno"></p>
-        </div>
-        <div class="toggle-mes">
-          <button><i class="fa-solid fa-angle-left"></i></button>
-          <p id="mesAbreviado"></p>
-          <button><i class="fa-solid fa-angle-right"></i></button>
         </div>
       </div>
 
@@ -183,10 +171,10 @@
             <input type="date" id="date" class="input">
           </div>
           <div class="inputAndLabel">
-            <label for="type">TIPO</label>
-            <select id="type" class="input">
+            <label for="recorrencia">RECORRÊNCIA</label>
+            <select id="recorrencia" class="input">
               <option value="unica">Única</option>
-              <option value="mensal">Semanal</option>
+              <option value="semanal">Semanal</option>
               <option value="mensal">Mensal</option>
             </select>
           </div>          
@@ -206,7 +194,7 @@
                 <th>DESCRIÇÃO</th>
                 <th>CATEGORIA</th>
                 <th>DATA</th>
-                <th>TIPO</th>
+                <th>RECORRÊNCIA</th>
                 <th>VALOR</th>
                 <th>AÇÕES</th>
               </tr>
@@ -318,10 +306,10 @@
             <option value="transporte">Transporte</option>
             <option value="saude">Saúde</option>
             <option value="lazer">Lazer</option>
-            <option value="lazer">Educação</option>
-            <option value="lazer">Vestuário</option>
-            <option value="lazer">Receita</option>
-            <option value="lazer">Outros</option>
+            <option value="educacao">Educação</option>
+            <option value="vestuario">Vestuário</option>
+            <option value="receita">Receita</option>
+            <option value="outros">Outros</option>
           </select>
 
           <!-- <button class="input"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button>
@@ -355,40 +343,11 @@
                 <th>DESCRIÇÃO</th>
                 <th>CATEGORIA</th>
                 <th>DATA</th>
-                <th>TIPO</th>
+                <th>RECORRÊNCIA</th>
                 <th>VALOR</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Mercado</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
-                <td>10/05</td>
-                <td>Única</td>
-                <td>-R$ 340</td>
-              </tr>
-              <tr>
-                <td>Freelancer</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Receita</td>
-                <td>08/05</td>
-                <td>Única</td>
-                <td>+ R$ 800</td>
-              </tr>
-              <tr>
-                <td>Aluguel</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Moradia</td>
-                <td>05/05</td>
-                <td>Fixo</td>
-                <td>-R$ 1.200</td>
-              </tr>
-              <tr>
-                <td>Uber</td>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Transporte</td>
-                <td>12/05</td>
-                <td>Única</td>
-                <td>-R$ 85</td>
-              </tr>
-            </tbody>
+            <tbody id="tabelaLancamentosHistorico"></tbody>
           </table>
           </div>
     </section>

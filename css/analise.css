@@ -20,6 +20,7 @@
 }
 
 .bars-infos .data-name {
+  width: 25%;
   font-size: 1.125rem;
   color: var(--neutro);
   text-wrap: nowrap;
@@ -45,6 +46,8 @@
 
 .porcentagem {
   font-size: 1.125rem;
+  width: 8%;
+  text-align: end;
 }
 
 .card-destaque {

@@ -1,23 +1,21 @@
-import { getUserConfig } from "./usuario.js";
+export const categoriaReceita = "receita";
 
-function pertenceAoMes(transacao, mesReferencia) {
-  return transacao.data.slice(0, 7) === mesReferencia;
+export function filtrarPorMes(transacoes, mesReferencia) {
+  return transacoes.filter(t => t.data.slice(0, 7) === mesReferencia);
 }
 
-function ehReceita(transacao) {
-  return transacao.categoria === "receita";
+export function filtrarPorCategoria(transacoes, categoria) {
+  return transacoes.filter(t => t.categoria === categoria);
 }
 
-export function filtrarPorMesETipo(mesReferencia, tipo) {
-  const userConfig = getUserConfig();
+export function filtrarReceitas(transacoes) {
+  return transacoes.filter(t => t.categoria === categoriaReceita);
+}
 
-  return userConfig.transacoes.filter(transacao => {
-    const mesCorresponde = pertenceAoMes(transacao, mesReferencia);
-    const tipoCorresponde = tipo === "receita" ? ehReceita(transacao) : !ehReceita(transacao);
-    return mesCorresponde && tipoCorresponde;
-  });
+export function filtrarDespesas(transacoes) {
+  return transacoes.filter(t => t.categoria !== categoriaReceita);
 }
 
 export function somarValores(transacoes) {
-  return transacoes.reduce((acumulador, transacao) => acumulador + transacao.valor, 0);
+  return transacoes.reduce((acumulador, t) => acumulador + t.valor, 0);
 }

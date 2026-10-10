@@ -10,32 +10,6 @@
   font-weight: 500;
 }
 
-.toggle-mes {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.5rem;
-  border-radius: 0.625rem;
-  background: var(--card);
-  border: var(--card-border);
-  width: fit-content;
-  height: fit-content;
-  font-weight: 500;
-}
-
-.toggle-mes button {
-  border: none;
-  background: transparent;
-  padding: 8px;
-  font-size: 0.6rem;
-  color: var(--neutro);
-}
-
-.toggle-mes button:hover {
-  cursor: pointer;
-}
-
 .warning {
   border: 1px solid var(--negativo);
   background: var(--semi-transparent-bg-negativo);
