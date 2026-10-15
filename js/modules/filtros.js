@@ -19,3 +19,13 @@ export function filtrarDespesas(transacoes) {
 export function somarValores(transacoes) {
   return transacoes.reduce((acumulador, t) => acumulador + t.valor, 0);
 }
+
+export function filtrarPorMesECategoria (lista, mes, categoria) {
+
+  let resultadoFiltro = lista;
+
+  if (mes !== "") { resultadoFiltro = filtrarPorMes(lista, mes); } 
+  if (categoria !== "todos") { resultadoFiltro = filtrarPorCategoria(resultadoFiltro, categoria); }
+  
+  return resultadoFiltro;
+}

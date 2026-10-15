@@ -6,6 +6,6 @@ export const categorias = {
   lazer:       { label: "Lazer",       cor: "#A855F7" },
   educacao:    { label: "Educação",    cor: "#06B6D4" },
   vestuario:   { label: "Vestuário",   cor: "#EC4899" },
-  receita:     { label: "Receita",     cor: "#16A34A" },
-  outros:      { label: "Outros",      cor: "#6B7280" }
+  outros:      { label: "Outros",      cor: "#6B7280" },  
+  receita:     { label: "Receita",     cor: "#16A34A" }
 };

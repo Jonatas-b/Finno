@@ -2,11 +2,12 @@ import { trocaTela } from "./router.js";
 import { capitalizar } from "./utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "./utils/moeda.js";
 import { carregarUsuario, getUserConfig, atualizarDadosUsuario } from "./modules/usuario.js";
-import { lancarDespeza, carregarLancamentos, renderizarResumo, percentualComprometido } from "./modules/transacoes.js";
+import { lancarDespeza, carregarLancamentos, renderizarResumo, percentualComprometido, cancelarLancamento } from "./modules/transacoes.js";
 import { toggleTema } from "./modules/tema.js";
 import { exibirDataAtual, obterMesAtual } from "./utils/data.js";
 import { categoriaReceita, filtrarPorMes, filtrarPorCategoria, filtrarReceitas, filtrarDespesas, somarValores } from "./modules/filtros.js";
 import { categorias } from "./utils/categorias.js";
+import { atualizarHistorico, iniciarFiltrosHistorico } from "./modules/historico.js";
 
 function atualizarInfos() {
   carregarUsuario();
@@ -21,15 +22,6 @@ function atualizarInfos() {
   const totalGasto = somarValores(despesas);
   const totalReceita = somarValores(receitas);
 
-  const totalAlimentacao = somarValores(filtrarPorCategoria(despesas, "alimentacao"));
-  const totalMoradia = somarValores(filtrarPorCategoria(despesas, "moradia"));
-  const totalTransporte = somarValores(filtrarPorCategoria(despesas, "transporte"));
-  const totalLazer = somarValores(filtrarPorCategoria(despesas, "lazer"));
-  const totalEducacao = somarValores(filtrarPorCategoria(despesas, "educacao"));
-  const totalSaude = somarValores(filtrarPorCategoria(despesas, "saude"));
-  const totalVestuario = somarValores(filtrarPorCategoria(despesas, "vestuario"));
-  const totalOutros = somarValores(filtrarPorCategoria(despesas, "outros"));
-
   if (userConfig.tema == "dark") {
     document.documentElement.classList.add("dark");
   }
@@ -43,6 +35,8 @@ function atualizarInfos() {
 
   if (saldoRestante < 0) {
     document.getElementById('saldoRestante').style.color = "var(--negativo)";
+  } else {
+    document.getElementById('saldoRestante').style.color = "var(--texto)";
   }
 
   document.getElementById("saudacaoNome").innerText = `Olá, ${capitalizar(userConfig.nome)}`;
@@ -63,44 +57,8 @@ function atualizarInfos() {
   }
   selecionarPorTexto();
 
-  document.getElementById('tabelaGastosPorCategoria').innerHTML = `
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.alimentacao.cor}"></i>Alimentação</td>
-      <td>- ${formatarComoMoeda(totalAlimentacao)}</td>
-    </tr>
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.moradia.cor}"></i>Moradia</td>
-      <td>- ${formatarComoMoeda(totalMoradia)}</td>
-    </tr>
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.transporte.cor}"></i>Transporte</td>
-      <td>- ${formatarComoMoeda(totalTransporte)}</td>
-    </tr>
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.lazer.cor}"></i>Lazer</td>
-      <td>- ${formatarComoMoeda(totalLazer)}</td>
-    </tr>
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.saude.cor}"></i>Saúde</td>
-      <td>- ${formatarComoMoeda(totalSaude)}</td>
-    </tr>
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.educacao.cor}"></i>Educação</td>
-      <td>- ${formatarComoMoeda(totalEducacao)}</td>
-    </tr>
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.vestuario.cor}"></i>Vestuário</td>
-      <td>- ${formatarComoMoeda(totalVestuario)}</td>
-    </tr>
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.outros.cor}"></i>Outros</td>
-      <td>- ${formatarComoMoeda(totalOutros)}</td>
-    </tr>
-    <tr>
-      <td class="item-name"><i class="fa-solid fa-circle" style="color: ${categorias.receita.cor}"></i>Receita</td>
-      <td style="color: var(--destaque)">+ ${formatarComoMoeda(totalReceita)}</td>
-    </tr>
-  `;
+  exibirTabelaGastosPorCategoria(doMes); 
+
 }
 
 function pegarInformacoesDoUser() {
@@ -125,7 +83,7 @@ function pegarInformacoesDoUser() {
       alerta: alertaComprometimento
     });
 
-    atualizarInfos();
+    atualizarTela();
   });
 }
 
@@ -164,16 +122,42 @@ function limparTodosDados() {
   });
 }
 
+function exibirTabelaGastosPorCategoria (doMes) {
+  let linhas = "";
+
+  for (const [chave, info] of Object.entries(categorias)) {
+    const ehReceita = chave === categoriaReceita;
+    const total = somarValores(filtrarPorCategoria(doMes, chave));
+
+    linhas += `
+      <tr>
+        <td class="item-name"><i class="fa-solid fa-circle" style="color: ${info.cor}"></i>${info.label}</td>
+        <td style="color: ${ehReceita ? "var(--destaque)": "var(--negativo)"}">${ehReceita ? "+" : "-"} ${formatarComoMoeda(total)}</td>
+      </tr>
+    `;
+  }
+
+  document.getElementById('tabelaGastosPorCategoria').innerHTML = linhas;
+
+}
+
+
+function atualizarTela() {
+  atualizarInfos();
+  carregarLancamentos();
+  atualizarHistorico();
+  renderizarResumo();
+  percentualComprometido();
+}
 
 // Inicialização
 trocaTela();
 toggleTema();
-atualizarInfos();
 pegarInformacoesDoUser();
 limparTodosDados();
-lancarDespeza();
-carregarLancamentos();
-renderizarResumo();
+iniciarFiltrosHistorico();
+lancarDespeza(atualizarTela);
 exibirDataAtual();
 trocarTipoLancamento();
-percentualComprometido();
+atualizarTela();
+cancelarLancamento();

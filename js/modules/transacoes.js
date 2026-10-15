@@ -15,7 +15,7 @@ export function criarLinhaTabelaLancamentos(transacao) {
       <td>${converterParaFormatoBR(transacao.data)}</td>
       <td>${capitalizar(transacao.recorrencia)}</td>
       <td>${formatarComoMoeda(transacao.valor)}</td>
-      <td><div><button>Editar</button><button>Excluir</button><div></td>
+      <td><div><button>Editar</button><button>Excluir</button></div></td>
     </tr>
   `);
 }
@@ -62,29 +62,24 @@ export function renderizarResumo() {
 }
 
 export function carregarLancamentos() {
+  document.getElementById("tabelaLancamentos").innerHTML = "";
+
   carregarUsuario();
   const userConfig = getUserConfig();
+  const lancamentosDoMes = filtrarPorMes(userConfig.transacoes, obterMesAtual());
 
-  if (userConfig.transacoes.length === 0) {
+  if (lancamentosDoMes.length === 0) {
     document.getElementById("tabelaLancamentos").insertAdjacentHTML("beforeend", `
       <tr><td colspan="6">Nenhum lançamento ainda.</td></tr>
     `);
-
-    document.getElementById("tabelaLancamentosHistorico").insertAdjacentHTML("beforeend", `
-      <tr><td colspan="5">Nenhum lançamento ainda.</td></tr>
-    `);
-    return;
   }
-
-  const lancamentosDoMes = filtrarPorMes(userConfig.transacoes, obterMesAtual());
 
   lancamentosDoMes.forEach(function (elemento) {
     criarLinhaTabelaLancamentos(elemento);
-    criarLinhaTabelaHistorico(elemento);
   });
 }
 
-export function lancarDespeza() {
+export function lancarDespeza(aoSalvar) {
   carregarUsuario();
 
   // Formata número para valor em Reais ao digitar
@@ -119,9 +114,9 @@ export function lancarDespeza() {
     };
 
     adicionarTransacao(novaTransacao);
-    criarLinhaTabelaLancamentos(novaTransacao);
-    renderizarResumo();
-    criarLinhaTabelaHistorico();
+    aoSalvar();
+
+    alert("Lançamento concluído.")
 
     document.getElementById("description").value = "";
     document.getElementById("value").value = "";
@@ -129,49 +124,64 @@ export function lancarDespeza() {
   });
 }
 
-export function percentualComprometido () {
+export function cancelarLancamento () {
+  document.getElementById('cancelarLancamento').addEventListener('click', function () {
+    document.getElementById("description").value = "";
+    document.getElementById("value").value = "";
+    document.getElementById("date").value = "";
+  })
+}
+
+const idsBadgesRestante = ["percentualSalarioRestante", "percentualSalarioRestanteHistorico"];
+
+function exibirBadgeRestante(id, texto, cor, fundo) {
+  const badge = document.getElementById(id);
+
+  badge.innerText = texto;
+  badge.style.color = cor;
+  badge.style.background = fundo;
+}
+
+export function percentualComprometido() {
   const userConfig = getUserConfig();
-  const metaPercentual = userConfig.alerta;
+  const metaPercentual = parseInt(userConfig.alerta, 10);
 
-  const transacoes = getUserConfig().transacoes;
+  const graficoBarra = document.getElementById("barraMetaPercentual");
+  const msgPercentualUtilizado = document.getElementById("percentualUtilizado");
+  const mensagemAlerta = document.getElementById("mensagemAlerta");
 
-  const doMes = filtrarPorMes(transacoes, obterMesAtual());
-  const despesas = filtrarDespesas(doMes);
-  const totalGasto = somarValores(despesas);
-  let percentualUtilizado = (totalGasto / userConfig.salario) * 100;
+  if (userConfig.salario <= 0) {
+    idsBadgesRestante.forEach(function (id) {
+      exibirBadgeRestante(id, "Defina seu salário", "var(--neutro)", "var(--semi-transparent-neutro)");
+    });
 
-  if (isNaN(percentualUtilizado)) {
-    percentualUtilizado = 0;
+    mensagemAlerta.innerText = "Cadastre seu salário para acompanhar a meta.";
+    msgPercentualUtilizado.innerText = "Sem salário cadastrado";
+    msgPercentualUtilizado.style.color = "var(--neutro)";
+    graficoBarra.style.width = "0%";
+    return;
   }
 
-  // Exibir Percentual Restante no Dashboard 
-  const percentualSalarioRestante = 100 - Math.round(percentualUtilizado);
-  document.getElementById('percentualSalarioRestante').innerText = `${percentualSalarioRestante}% restante`;
-  if (percentualSalarioRestante <= (100 - parseInt((metaPercentual)))) {
-    document.getElementById('percentualSalarioRestante').style.color = "var(--negativo)";
-    document.getElementById('percentualSalarioRestante').style.background = "var(--semi-transparent-bg-negativo)";
-  }
+  const doMes = filtrarPorMes(userConfig.transacoes, obterMesAtual());
+  const totalGasto = somarValores(filtrarDespesas(doMes));
 
-  // Exibir Percentual Restante no Histórico
-  document.getElementById('percentualSalarioRestanteHistorico').innerText = `${percentualSalarioRestante}% restante`;
-  if (percentualSalarioRestante <= (100 - parseInt((metaPercentual)))) {
-    document.getElementById('percentualSalarioRestanteHistorico').style.color = "var(--negativo)";
-    document.getElementById('percentualSalarioRestanteHistorico').style.background = "var(--semi-transparent-bg-negativo)";
-  }
+  const percentualUtilizado = (totalGasto / userConfig.salario) * 100;
+  const percentualRestante = 100 - Math.round(percentualUtilizado);
+  const metaEstourada = percentualUtilizado > metaPercentual;
 
-  const graficoBarra = document.getElementById('barraMetaPercentual');
-  const msgPercentualUtilizado = document.getElementById('percentualUtilizado');
+  const corStatus = metaEstourada ? "var(--negativo)" : "var(--destaque)";
+  const fundoStatus = metaEstourada ? "var(--semi-transparent-bg-negativo)" : "var(--semi-transparent-bg)";
+  const textoRestante = percentualRestante >= 0
+    ? `${percentualRestante}% restante`
+    : `Excedeu ${Math.abs(percentualRestante)}%`;
 
-  document.getElementById('mensagemAlerta').innerText = `Meta: manter abaixo de ${metaPercentual}`;
-  graficoBarra.style.width = `${percentualUtilizado}%`;
+  idsBadgesRestante.forEach(function (id) {
+    exibirBadgeRestante(id, textoRestante, corStatus, fundoStatus);
+  });
+
+  mensagemAlerta.innerText = `Meta: manter abaixo de ${metaPercentual}%`;
   msgPercentualUtilizado.innerText = `${Math.round(percentualUtilizado)}% utilizado`;
-
-   // Exibir Percentual Restante no card da barra 
-  if(percentualUtilizado <= parseInt(metaPercentual)) {
-    graficoBarra.style.background = "var(--destaque)";
-    msgPercentualUtilizado.style.color = "var(--destaque)";
-  } else {
-    graficoBarra.style.background = "var(--negativo)";
-    msgPercentualUtilizado.style.color = "var(--negativo)";
-  }
+  msgPercentualUtilizado.style.color = corStatus;
+  graficoBarra.style.width = `${Math.min(percentualUtilizado, 100)}%`;
+  graficoBarra.style.background = corStatus;
 }

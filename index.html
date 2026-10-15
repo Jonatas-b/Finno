@@ -182,7 +182,7 @@
 
         <div class="confirm-buttons">
           <button id="salvarLancamento" class="salvar">Salvar lançamento</button>
-          <button class="cancelar">Cancelar</button>
+          <button id="cancelarLancamento" class="cancelar">Cancelar</button>
         </div>
       </div>
       <div class="card">
@@ -217,34 +217,7 @@
           <h3>Gastos por categoria</h3>
           <table>
             <tbody id="tabelaGastosPorCategoria">
-              <tr>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Alimentação</td>
-                <td>R$ 340</td>
-              </tr>
-              <tr>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Receita</td>
-                <td>R$ 800</td>
-              </tr>
-              <tr>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Moradia</td>
-                <td>R$ 1.200</td>
-              </tr>
-              <tr>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Transporte</td>
-                <td>R$ 85</td>
-              </tr>
-              <tr>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Lazer</td>
-                <td>R$ 620</td>
-              </tr>
-              <tr>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Saúde</td>
-                <td>R$ 260</td>
-              </tr>
-              <tr>
-                <td class="item-name"><i class="fa-solid fa-circle"></i>Outros</td>
-                <td>R$ 500</td>
-              </tr>
+              
             </tbody>
           </table>
       </div>
@@ -297,9 +270,9 @@
       <h2>Histórico</h2>
 
       <div class="historico-filtro">
-          <input class="input" type="month" >
+          <input class="input" type="month" id="inputFiltroMes">
 
-          <select class="input">
+          <select class="input" id="inputFiltroCategoria">
             <option value="todos">Todas categorias</option>
             <option value="alimentacao">Alimentação</option>
             <option value="moradia">Moradia</option>
@@ -324,18 +297,18 @@
         </div>
         <div class="card">
           <h5>TOTAL GASTO</h5>
-          <h4><em id="totalGastoHistorico">R$ 3.800</em></h4>
-          <b class=" negativo-info">8% vs abr</b>
+          <h4><em id="totalGastoHistorico">R$ 0,00</em></h4>
+          <b class=" negativo-info"></b>
         </div>
         <div class="card">
           <h5>SALDO RESTANTE</h5>
-          <h4><em id="saldoRestanteHistorico">R$ 1.200</em></h4>
+          <h4><em id="saldoRestanteHistorico">R$ 0,00</em></h4>
           <b id="percentualSalarioRestanteHistorico">12%</b>
         </div>
       </div>
 
       <div class="card">
-            <h3 id="mesAtualTabelaHistorico">Maio 2026</h3>
+            <h3 id="mesAtualTabelaHistorico"></h3>
 
             <table>
             <thead>
