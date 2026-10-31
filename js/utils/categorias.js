@@ -9,3 +9,6 @@ export const categorias = {
   outros:      { label: "Outros",      cor: "#6B7280" },  
   receita:     { label: "Receita",     cor: "#16A34A" }
 };
+
+export const necessidade = ["alimentacao", "moradia", "transporte", "saude", "educacao"];
+export const desejo = ["lazer", "vestuario", "outros"];

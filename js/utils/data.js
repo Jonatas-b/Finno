@@ -17,8 +17,22 @@ export function exibirDataAtual() {
 
     document.getElementById('msgMesAno').innerText = `Resumo de ${monthNameLong} de ${ano}`;
     document.getElementById('nomeMesTabela').innerText = monthNameLong + " " + ano;
-    document.getElementById('mesAtualTabelaHistorico').innerText = monthNameLong + " " + ano;
     document.getElementById('dataAtualAnalise').innerText = `${monthNameLong} ${ano} · gráficos e recomendações`;
+}
+
+export function converterDataParaEscrita (data) {
+    const meses = [
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+
+    const ano = data.split("-")[0];
+    let nomeMes = meses[data.split("-")[1] - 1];
+
+    if (nomeMes === undefined) {
+        nomeMes = "Todos os meses";
+    }
+    return `${nomeMes} ${ano}`;
 }
 
 export function converterParaFormatoBR(dataISO) {

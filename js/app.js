@@ -2,11 +2,12 @@ import { trocaTela } from "./router.js";
 import { capitalizar } from "./utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "./utils/moeda.js";
 import { carregarUsuario, getUserConfig, atualizarDadosUsuario } from "./modules/usuario.js";
-import { lancarDespeza, carregarLancamentos, renderizarResumo, percentualComprometido, cancelarLancamento } from "./modules/transacoes.js";
+import { lancarDespesa, carregarLancamentos, renderizarResumo, percentualComprometido, cancelarLancamento } from "./modules/transacoes.js";
 import { toggleTema } from "./modules/tema.js";
 import { exibirDataAtual, obterMesAtual } from "./utils/data.js";
-import { categoriaReceita, filtrarPorMes, filtrarPorCategoria, filtrarReceitas, filtrarDespesas, somarValores } from "./modules/filtros.js";
-import { categorias } from "./utils/categorias.js";
+import { categoriaReceita, filtrarPorMes, filtrarPorCategoria, somarValores } from "./modules/filtros.js";
+import { calcularResumoDoMes } from "./modules/calculos.js";
+import { categorias, necessidade } from "./utils/categorias.js";
 import { atualizarHistorico, iniciarFiltrosHistorico } from "./modules/historico.js";
 
 function atualizarInfos() {
@@ -16,33 +17,25 @@ function atualizarInfos() {
   const transacoes = getUserConfig().transacoes;
   const doMes = filtrarPorMes(transacoes, obterMesAtual());
 
-  const despesas = filtrarDespesas(doMes);
-  const receitas = filtrarReceitas(doMes);
-  
-  const totalGasto = somarValores(despesas);
-  const totalReceita = somarValores(receitas);
+  const mesAtual = obterMesAtual();
+  const resumo = calcularResumoDoMes(transacoes, mesAtual, mesAtual, userConfig.salario, userConfig.alerta);
 
   if (userConfig.tema == "dark") {
     document.documentElement.classList.add("dark");
   }
 
-  document.getElementById('totalGasto').innerText = formatarComoMoeda(totalGasto);
-  document.getElementById('totalGastoHistorico').innerText = formatarComoMoeda(totalGasto);
+  document.getElementById('totalGasto').innerText = formatarComoMoeda(resumo.gasto);
+  document.getElementById('saldoRestante').innerText = formatarComoMoeda(resumo.saldo);
 
-  const saldoRestante = (userConfig.salario - totalGasto + totalReceita);
-  document.getElementById('saldoRestante').innerText = formatarComoMoeda(saldoRestante);
-  document.getElementById('saldoRestanteHistorico').innerText = formatarComoMoeda(saldoRestante);
-
-  if (saldoRestante < 0) {
+  if (resumo.saldo < 0) {
     document.getElementById('saldoRestante').style.color = "var(--negativo)";
   } else {
     document.getElementById('saldoRestante').style.color = "var(--texto)";
-  }
+  }  
 
   document.getElementById("saudacaoNome").innerText = `Olá, ${capitalizar(userConfig.nome)}`;
   document.getElementById("inputName").value = capitalizar(userConfig.nome);
   document.getElementById("salario").innerText = `${formatarComoMoeda(userConfig.salario)}`;
-  document.getElementById("salarioHistorico").innerText = `${formatarComoMoeda(userConfig.salario)}`;
   if (localStorage.length >= 1) document.getElementById("inputSalario").value = formatarComoMoeda(userConfig.salario);
 
   function selecionarPorTexto() {
@@ -58,11 +51,13 @@ function atualizarInfos() {
   selecionarPorTexto();
 
   exibirTabelaGastosPorCategoria(doMes); 
+  // calcularGastosPorGrupo(doMes);
 
 }
 
 function pegarInformacoesDoUser() {
 
+  // Formatar para moeda ao digitar no campo de salário nas configurações
   document.getElementById("inputSalario").addEventListener("input", function (evento) {
     let apenasDigitos = evento.target.value.replace(/\D/g, "");
     let valorEmReais = Number(apenasDigitos) / 100;
@@ -138,9 +133,18 @@ function exibirTabelaGastosPorCategoria (doMes) {
   }
 
   document.getElementById('tabelaGastosPorCategoria').innerHTML = linhas;
-
 }
 
+// function calcularGastosPorGrupo (doMes) {
+//   for (const [chave, info] of Object.entries(categorias)) {
+//     const necessidadesTotal = somarValores(filtrarPorCategoria(doMes, necessidade.values));
+//     // const desejosTotal = ;
+
+//     console.log(necessidadesTotal)
+
+
+//   }
+// }
 
 function atualizarTela() {
   atualizarInfos();
@@ -156,7 +160,7 @@ toggleTema();
 pegarInformacoesDoUser();
 limparTodosDados();
 iniciarFiltrosHistorico();
-lancarDespeza(atualizarTela);
+lancarDespesa(atualizarTela);
 exibirDataAtual();
 trocarTipoLancamento();
 atualizarTela();

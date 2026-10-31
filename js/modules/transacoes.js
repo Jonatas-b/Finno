@@ -3,8 +3,8 @@ import { capitalizar } from "../utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "../utils/moeda.js";
 import { getUserConfig, carregarUsuario, adicionarTransacao } from "./usuario.js";
 import { converterParaFormatoBR, obterMesAtual } from "../utils/data.js";
-import { filtrarPorMes, filtrarDespesas, somarValores } from "./filtros.js";
-
+import { filtrarPorMes } from "./filtros.js";
+import { calcularResumoDoMes, textoPercentualRestante } from "./calculos.js";
 // EXIBIR AS LINHAS DAS TABELAS DE LANÇAMENTO, RESUMO NO DASHBOARD E HISTÓRICO
 
 export function criarLinhaTabelaLancamentos(transacao) {
@@ -79,7 +79,7 @@ export function carregarLancamentos() {
   });
 }
 
-export function lancarDespeza(aoSalvar) {
+export function lancarDespesa(aoSalvar) {
   carregarUsuario();
 
   // Formata número para valor em Reais ao digitar
@@ -132,29 +132,35 @@ export function cancelarLancamento () {
   })
 }
 
-const idsBadgesRestante = ["percentualSalarioRestante", "percentualSalarioRestanteHistorico"];
-
-function exibirBadgeRestante(id, texto, cor, fundo) {
+// Badge "% restante" usado no dashboard e no histórico.
+// Recebe o resumo de calcularResumoDoMes, então a regra (texto e cor) fica num lugar só.
+export function exibirBadgeRestante(id, resumo) {
   const badge = document.getElementById(id);
 
-  badge.innerText = texto;
-  badge.style.color = cor;
-  badge.style.background = fundo;
+  if (resumo.percentualRestante === null) {
+    badge.innerText = "Defina seu salário";
+    badge.style.color = "var(--neutro)";
+    badge.style.background = "var(--semi-transparent-neutro)";
+    return;
+  }
+
+  badge.innerText = textoPercentualRestante(resumo.percentualRestante);
+  badge.style.color = resumo.metaEstourada ? "var(--negativo)" : "var(--destaque)";
+  badge.style.background = resumo.metaEstourada ? "var(--semi-transparent-bg-negativo)" : "var(--semi-transparent-bg)";
 }
 
 export function percentualComprometido() {
   const userConfig = getUserConfig();
-  const metaPercentual = parseInt(userConfig.alerta, 10);
+  const mesAtual = obterMesAtual();
+  const resumo = calcularResumoDoMes(userConfig.transacoes, mesAtual, mesAtual, userConfig.salario, userConfig.alerta);
 
   const graficoBarra = document.getElementById("barraMetaPercentual");
   const msgPercentualUtilizado = document.getElementById("percentualUtilizado");
   const mensagemAlerta = document.getElementById("mensagemAlerta");
 
-  if (userConfig.salario <= 0) {
-    idsBadgesRestante.forEach(function (id) {
-      exibirBadgeRestante(id, "Defina seu salário", "var(--neutro)", "var(--semi-transparent-neutro)");
-    });
+  exibirBadgeRestante("percentualSalarioRestante", resumo);
 
+  if (resumo.percentualGasto === null) {
     mensagemAlerta.innerText = "Cadastre seu salário para acompanhar a meta.";
     msgPercentualUtilizado.innerText = "Sem salário cadastrado";
     msgPercentualUtilizado.style.color = "var(--neutro)";
@@ -162,26 +168,11 @@ export function percentualComprometido() {
     return;
   }
 
-  const doMes = filtrarPorMes(userConfig.transacoes, obterMesAtual());
-  const totalGasto = somarValores(filtrarDespesas(doMes));
+  const corStatus = resumo.metaEstourada ? "var(--negativo)" : "var(--destaque)";
 
-  const percentualUtilizado = (totalGasto / userConfig.salario) * 100;
-  const percentualRestante = 100 - Math.round(percentualUtilizado);
-  const metaEstourada = percentualUtilizado > metaPercentual;
-
-  const corStatus = metaEstourada ? "var(--negativo)" : "var(--destaque)";
-  const fundoStatus = metaEstourada ? "var(--semi-transparent-bg-negativo)" : "var(--semi-transparent-bg)";
-  const textoRestante = percentualRestante >= 0
-    ? `${percentualRestante}% restante`
-    : `Excedeu ${Math.abs(percentualRestante)}%`;
-
-  idsBadgesRestante.forEach(function (id) {
-    exibirBadgeRestante(id, textoRestante, corStatus, fundoStatus);
-  });
-
-  mensagemAlerta.innerText = `Meta: manter abaixo de ${metaPercentual}%`;
-  msgPercentualUtilizado.innerText = `${Math.round(percentualUtilizado)}% utilizado`;
+  mensagemAlerta.innerText = `Meta: manter abaixo de ${resumo.meta}%`;
+  msgPercentualUtilizado.innerText = `${Math.round(resumo.percentualGasto)}% utilizado`;
   msgPercentualUtilizado.style.color = corStatus;
-  graficoBarra.style.width = `${Math.min(percentualUtilizado, 100)}%`;
+  graficoBarra.style.width = `${Math.min(resumo.percentualGasto, 100)}%`;
   graficoBarra.style.background = corStatus;
 }

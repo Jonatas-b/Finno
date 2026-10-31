@@ -20,16 +20,36 @@
     <!-- Fonte -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet"/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Ícone do navegador -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon_io/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon_io/favicon-16x16.png">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/assets/favicon_io/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/favicon_io/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/favicon_io/favicon-16x16.png"
+    />
     <!-- <link rel="manifest" href="/assets/favicon_io/site.webmanifest"> -->
 
     <!-- Ícones da UI -->
@@ -69,7 +89,8 @@
     <section class="dashboard active" id="dashboard">
       <div class="dashboard-top">
         <div class="title">
-          <h1 id="saudacaoNome"></h1> <!-- Nome inserido com JavaScript -->
+          <h1 id="saudacaoNome"></h1>
+          <!-- Nome inserido com JavaScript -->
           <p id="msgMesAno"></p>
         </div>
       </div>
@@ -82,21 +103,21 @@
       <div class="cards">
         <div class="card">
           <h5>SALÁRIO</h5>
-        <h4><em id="salario">R$ 0,00</em></h4>
-        <b>fixo</b>
+          <h4><em id="salario">R$ 0,00</em></h4>
+          <b>fixo</b>
+        </div>
+        <div class="card">
+          <h5>TOTAL GASTO</h5>
+          <h4><em id="totalGasto">R$ 0,00</em></h4>
+          <!-- <b class=" negativo-info">porcentagem a mais ou a menos em relação ao mês anterior</b> -->
+        </div>
+        <div class="card">
+          <h5>SALDO RESTANTE</h5>
+          <h4><em id="saldoRestante">R$ 0,00</em></h4>
+          <b id="percentualSalarioRestante"></b>
+        </div>
       </div>
-      <div class="card">
-        <h5>TOTAL GASTO</h5>
-        <h4><em id="totalGasto">R$ 0,00</em></h4>
-        <!-- <b class=" negativo-info">porcentagem a mais ou a menos em relação ao mês anterior</b> -->
-      </div>
-      <div class="card">
-        <h5>SALDO RESTANTE</h5>
-        <h4><em id="saldoRestante">R$ 0,00</em></h4>
-        <b id="percentualSalarioRestante"></b>
-      </div>
-    </div>
-      
+
       <div class="card projecao">
         <div class="title">
           <h3>Comprometimento do salário</h3>
@@ -105,7 +126,9 @@
         <div class="bar-bg">
           <div class="bar" id="barraMetaPercentual"></div>
         </div>
-        <p class="info" id="mensagemAlerta">Meta: manter abaixo de 70% · Projeção: R$ 950 ao final do mês</p>
+        <p class="info" id="mensagemAlerta">
+          Meta: manter abaixo de 70% · Projeção: R$ 950 ao final do mês
+        </p>
       </div>
 
       <div class="half">
@@ -119,7 +142,8 @@
                 <th>VALOR</th>
               </tr>
             </thead>
-            <tbody id="tabelaResumo"> <!-- Elementos inseridos com JavaScript  -->
+            <tbody id="tabelaResumo">
+              <!-- Elementos inseridos com JavaScript  -->
             </tbody>
           </table>
         </div>
@@ -133,24 +157,34 @@
     <section class="lancamentos" id="lancamentos">
       <div class="title">
         <h2>Lançamentos</h2>
-        <p>Registre receitas e despezas</p>
+        <p>Registre receitas e despesas</p>
       </div>
 
       <div class="card">
         <h3>Novo lançamento</h3>
         <div class="buttons">
-          <button class="despeza active" id="btnDespesa"><i class="fa-solid fa-arrow-down"></i> Despezas</button>
-          <button class="receita" id="btnReceita"><i class="fa-solid fa-arrow-up"></i> Receita</button>
+          <button class="despeza active" id="btnDespesa">
+            <i class="fa-solid fa-arrow-down"></i> Despesas
+          </button>
+          <button class="receita" id="btnReceita">
+            <i class="fa-solid fa-arrow-up"></i> Receita
+          </button>
         </div>
 
         <div class="lacamento-config">
           <div class="inputAndLabel">
             <label for="description">DESCRIÇÃO</label>
-            <input type="text" id="description" class="input" placeholder="Ex: Mercado, Salário...">
+            <input
+              type="text"
+              id="description"
+              maxlength="20"
+              class="input"
+              placeholder="Ex: Compras do Mês, Conta de Luz..."
+            />
           </div>
           <div class="inputAndLabel">
             <label for="value">VALOR</label>
-            <input type="text" id="value" class="input" placeholder="R$ 0,00">
+            <input type="text" id="value" class="input" placeholder="R$ 0,00" />
           </div>
           <div class="inputAndLabel">
             <label for="category">CATEGORIA</label>
@@ -168,7 +202,7 @@
           </div>
           <div class="inputAndLabel">
             <label for="date">DATA</label>
-            <input type="date" id="date" class="input">
+            <input type="date" id="date" class="input" />
           </div>
           <div class="inputAndLabel">
             <label for="recorrencia">RECORRÊNCIA</label>
@@ -177,32 +211,33 @@
               <option value="semanal">Semanal</option>
               <option value="mensal">Mensal</option>
             </select>
-          </div>          
+          </div>
         </div>
 
         <div class="confirm-buttons">
-          <button id="salvarLancamento" class="salvar">Salvar lançamento</button>
+          <button id="salvarLancamento" class="salvar">
+            Salvar lançamento
+          </button>
           <button id="cancelarLancamento" class="cancelar">Cancelar</button>
         </div>
       </div>
       <div class="card">
-            <h3 id="nomeMesTabela">Maio 2026</h3>
+        <h3 id="nomeMesTabela">Maio 2026</h3>
 
-            <table>
-            <thead>
-              <tr>
-                <th>DESCRIÇÃO</th>
-                <th>CATEGORIA</th>
-                <th>DATA</th>
-                <th>RECORRÊNCIA</th>
-                <th>VALOR</th>
-                <th>AÇÕES</th>
-              </tr>
-            </thead>
-            <tbody id="tabelaLancamentos">
-            </tbody>
-          </table>
-          </div>
+        <table>
+          <thead>
+            <tr>
+              <th>DESCRIÇÃO</th>
+              <th>CATEGORIA</th>
+              <th>DATA</th>
+              <th>RECORRÊNCIA</th>
+              <th>VALOR</th>
+              <th>AÇÕES</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaLancamentos"></tbody>
+        </table>
+      </div>
     </section>
 
     <!-- SEÇÃO ANÁLISE -->
@@ -216,16 +251,14 @@
         <div class="card">
           <h3>Gastos por categoria</h3>
           <table>
-            <tbody id="tabelaGastosPorCategoria">
-              
-            </tbody>
+            <tbody id="tabelaGastosPorCategoria"></tbody>
           </table>
+        </div>
+
+        <div class="card">
+          <h3>Evolução - últimos 6 meses</h3>
+        </div>
       </div>
-      
-      <div class="card">
-        <h3>Evolução - últimos 6 meses</h3>
-      </div>
-    </div>
 
       <div class="card">
         <h3>Regra 50/30/20 - sua situação</h3>
@@ -257,10 +290,22 @@
       <div class="card card-destaque">
         <h3>Análise financeira do mês</h3>
         <ul>
-          <li><i class="fa-solid fa-arrow-right"></i>Poupança zerada — você está gastando 100% da renda. Risco alto.</li>
-          <li><i class="fa-solid fa-arrow-right"></i>Lazer em R$ 620 está 40% acima da média dos últimos 3 meses (R$ 443).</li>
-          <li><i class="fa-solid fa-arrow-right"></i>Se reduzir lazer em R$ 300, já cobre 30% da meta de poupança ideal.</li>
-          <li><i class="fa-solid fa-arrow-right"></i>Projeção: se mantiver o ritmo atual, fecha o mês com R$ 950 de saldo.</li>
+          <li>
+            <i class="fa-solid fa-arrow-right"></i>Poupança zerada — você está
+            gastando 100% da renda. Risco alto.
+          </li>
+          <li>
+            <i class="fa-solid fa-arrow-right"></i>Lazer em R$ 620 está 40%
+            acima da média dos últimos 3 meses (R$ 443).
+          </li>
+          <li>
+            <i class="fa-solid fa-arrow-right"></i>Se reduzir lazer em R$ 300,
+            já cobre 30% da meta de poupança ideal.
+          </li>
+          <li>
+            <i class="fa-solid fa-arrow-right"></i>Projeção: se mantiver o ritmo
+            atual, fecha o mês com R$ 950 de saldo.
+          </li>
         </ul>
       </div>
     </section>
@@ -270,59 +315,60 @@
       <h2>Histórico</h2>
 
       <div class="historico-filtro">
-          <input class="input" type="month" id="inputFiltroMes">
+        <input class="input" type="month" id="inputFiltroMes" />
 
-          <select class="input" id="inputFiltroCategoria">
-            <option value="todos">Todas categorias</option>
-            <option value="alimentacao">Alimentação</option>
-            <option value="moradia">Moradia</option>
-            <option value="transporte">Transporte</option>
-            <option value="saude">Saúde</option>
-            <option value="lazer">Lazer</option>
-            <option value="educacao">Educação</option>
-            <option value="vestuario">Vestuário</option>
-            <option value="receita">Receita</option>
-            <option value="outros">Outros</option>
-          </select>
+        <select class="input" id="inputFiltroCategoria">
+          <option value="todos">Todas categorias</option>
+          <option value="alimentacao">Alimentação</option>
+          <option value="moradia">Moradia</option>
+          <option value="transporte">Transporte</option>
+          <option value="saude">Saúde</option>
+          <option value="lazer">Lazer</option>
+          <option value="educacao">Educação</option>
+          <option value="vestuario">Vestuário</option>
+          <option value="receita">Receita</option>
+          <option value="outros">Outros</option>
+        </select>
 
-          <!-- <button class="input"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button>
+        <!-- <button class="input"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button>
           <button class="input"><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button> -->
       </div>
-        
+
       <div class="cards">
-        <div class="card">
+        <div class="card" id="cardSalarioHistorico">
           <h5>SALÁRIO</h5>
-          <h4><em id="salarioHistorico"></em></h4>
+          <h4><em id="salarioHistorico">R$ 0,00</em></h4>
           <b>fixo</b>
         </div>
         <div class="card">
           <h5>TOTAL GASTO</h5>
           <h4><em id="totalGastoHistorico">R$ 0,00</em></h4>
-          <b class=" negativo-info"></b>
+          <b class="negativo-info" id="percentualGastoHistorico"></b>
         </div>
         <div class="card">
-          <h5>SALDO RESTANTE</h5>
+          <h5 id="textoSaldoRestante">SALDO RESTANTE</h5>
           <h4><em id="saldoRestanteHistorico">R$ 0,00</em></h4>
-          <b id="percentualSalarioRestanteHistorico">12%</b>
+          <b id="percentualSalarioRestanteHistorico"></b>
         </div>
       </div>
 
       <div class="card">
-            <h3 id="mesAtualTabelaHistorico"></h3>
+        <h3 id="mesAtualTabelaHistorico"></h3>
+        <p class="info" id="totalCategoriaFiltrada"></p>
 
-            <table>
-            <thead>
-              <tr>
-                <th>DESCRIÇÃO</th>
-                <th>CATEGORIA</th>
-                <th>DATA</th>
-                <th>RECORRÊNCIA</th>
-                <th>VALOR</th>
-              </tr>
-            </thead>
-            <tbody id="tabelaLancamentosHistorico"></tbody>
-          </table>
-          </div>
+        <table>
+          <thead>
+            <tr>
+              <th>DESCRIÇÃO</th>
+              <th>CATEGORIA</th>
+              <th>DATA</th>
+              <th>RECORRÊNCIA</th>
+              <th>VALOR</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaLancamentosHistorico"></tbody>
+        </table>
+      </div>
     </section>
 
     <section class="configuracoes" id="configuracoes">
@@ -335,14 +381,19 @@
             <p>Nome</p>
             <h5>Como gostaria de ser chamado?</h5>
           </div>
-          <input type="text" id="inputName" class="input">
+          <input type="text" id="inputName" class="input" />
         </div>
         <div class="config">
           <div class="infoConfig">
             <p>Salário mensal líquido</p>
             <h5>Usado para calcular % comprometido e regra 50/30/20</h5>
           </div>
-          <input type="text" id="inputSalario" placeholder="R$ 0,00" class="input">
+          <input
+            type="text"
+            id="inputSalario"
+            placeholder="R$ 0,00"
+            class="input"
+          />
         </div>
         <div class="config">
           <div class="infoConfig">
@@ -367,7 +418,9 @@
             <p>Tema</p>
             <h5>Dark ou light mode</h5>
           </div>
-          <button id="buttonToggleThemeConfig" class="btnGreen">Light mode</button>
+          <button id="buttonToggleThemeConfig" class="btnGreen">
+            Light mode
+          </button>
         </div>
       </div>
       <div class="card">
@@ -377,7 +430,9 @@
             <p>Exportar backup completo</p>
             <h5>Todos os lançamentos em JSON</h5>
           </div>
-          <button class="btnGreen"><i class="fa-solid fa-arrow-down"></i>Exportar</button>
+          <button class="btnGreen">
+            <i class="fa-solid fa-arrow-down"></i>Exportar
+          </button>
         </div>
         <div class="config">
           <div class="infoConfig">
