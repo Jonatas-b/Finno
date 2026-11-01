@@ -2,12 +2,12 @@ import { trocaTela } from "./router.js";
 import { capitalizar } from "./utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "./utils/moeda.js";
 import { carregarUsuario, getUserConfig, atualizarDadosUsuario } from "./modules/usuario.js";
-import { lancarDespesa, carregarLancamentos, renderizarResumo, percentualComprometido, cancelarLancamento } from "./modules/transacoes.js";
+import { lancarDespesa, excluirLancamento, carregarLancamentos, renderizarResumo, percentualComprometido, cancelarLancamento } from "./modules/transacoes.js";
 import { toggleTema } from "./modules/tema.js";
 import { exibirDataAtual, obterMesAtual } from "./utils/data.js";
 import { categoriaReceita, filtrarPorMes, filtrarPorCategoria, somarValores } from "./modules/filtros.js";
 import { calcularResumoDoMes } from "./modules/calculos.js";
-import { categorias, necessidade } from "./utils/categorias.js";
+import { categorias } from "./utils/categorias.js";
 import { atualizarHistorico, iniciarFiltrosHistorico } from "./modules/historico.js";
 
 function atualizarInfos() {
@@ -117,6 +117,8 @@ function limparTodosDados() {
   });
 }
 
+
+
 function exibirTabelaGastosPorCategoria (doMes) {
   let linhas = "";
 
@@ -161,6 +163,7 @@ pegarInformacoesDoUser();
 limparTodosDados();
 iniciarFiltrosHistorico();
 lancarDespesa(atualizarTela);
+excluirLancamento(atualizarTela);
 exibirDataAtual();
 trocarTipoLancamento();
 atualizarTela();

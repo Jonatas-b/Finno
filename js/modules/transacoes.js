@@ -1,7 +1,7 @@
 import { categorias } from "../utils/categorias.js";
 import { capitalizar } from "../utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "../utils/moeda.js";
-import { getUserConfig, carregarUsuario, adicionarTransacao } from "./usuario.js";
+import { getUserConfig, carregarUsuario, adicionarTransacao, removerTransacao } from "./usuario.js";
 import { converterParaFormatoBR, obterMesAtual } from "../utils/data.js";
 import { filtrarPorMes } from "./filtros.js";
 import { calcularResumoDoMes, textoPercentualRestante } from "./calculos.js";
@@ -15,7 +15,7 @@ export function criarLinhaTabelaLancamentos(transacao) {
       <td>${converterParaFormatoBR(transacao.data)}</td>
       <td>${capitalizar(transacao.recorrencia)}</td>
       <td>${formatarComoMoeda(transacao.valor)}</td>
-      <td><div><button>Editar</button><button>Excluir</button></div></td>
+      <td><div><button data-id="${transacao.id}" data-acao="editar" >Editar</button><button data-id="${transacao.id}" data-acao="excluir" >Excluir</button></div></td>
     </tr>
   `);
 }
@@ -121,6 +121,20 @@ export function lancarDespesa(aoSalvar) {
     document.getElementById("description").value = "";
     document.getElementById("value").value = "";
     document.getElementById("date").value = "";
+  });
+}
+
+export function excluirLancamento (aoSalvar) {
+  document.getElementById('tabelaLancamentos').addEventListener('click', function (evento) {
+    const btn = evento.target.closest("button");
+    if (btn === null) return;
+
+    const idBtnClicado = Number(btn.dataset.id);
+
+    if (btn.dataset.acao === "excluir" && window.confirm("Tem certeza que deseja excluir o lançamento? Essa ação não pode ser desfeita!")) {
+      removerTransacao(idBtnClicado);
+      aoSalvar();
+    }
   });
 }
 

@@ -60,19 +60,6 @@ table tbody tr .item-name .fa-circle {
   margin-right: 0.5rem;
 }
 
-table tbody :nth-child(1) i {
-  color: red;
-}
-table tbody :nth-child(2) i {
-  color: var(--destaque);
-}
-table tbody :nth-child(3) i {
-  color: blue;
-}
-table tbody :nth-child(4) i {
-  color: yellow;
-}
-
 table td .fa-circle {
   font-size: 0.75rem;
 }
@@ -125,7 +112,8 @@ label {
   border: var(--card-border);
 }
 
-.salvar:hover, .cancelar:hover {
+.salvar:hover,
+.cancelar:hover {
   cursor: pointer;
 }
 
@@ -143,6 +131,7 @@ table tbody tr td div :nth-child(1) {
   border-radius: 0.5rem;
   color: var(--destaque);
   font-weight: 600;
+  cursor: pointer;
 }
 
 table tbody tr td div :nth-child(2) {
@@ -153,4 +142,5 @@ table tbody tr td div :nth-child(2) {
   border-radius: 0.5rem;
   color: var(--negativo);
   font-weight: 600;
+  cursor: pointer;
 }

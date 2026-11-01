@@ -43,6 +43,13 @@ export function adicionarTransacao(transacao) {
   salvarUsuario();
 }
 
+export function removerTransacao (id) {
+  const index = userConfig.transacoes.findIndex(item => item.id === id);
+
+  if (index !== -1) userConfig.transacoes.splice(index, 1);
+  salvarUsuario();
+}
+
 export function atualizarTema(tema) {
   userConfig.tema = tema;
   salvarUsuario();
