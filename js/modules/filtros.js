@@ -1,7 +1,13 @@
 export const categoriaReceita = "receita";
 
+// Regra do mês em um lugar só: compara "AAAA-MM" inteiro como texto.
+// data no formato "AAAA-MM-DD", mesReferencia no formato "AAAA-MM".
+export function dataEstaNoMes(data, mesReferencia) {
+  return data.slice(0, 7) === mesReferencia;
+}
+
 export function filtrarPorMes(transacoes, mesReferencia) {
-  return transacoes.filter(t => t.data.slice(0, 7) === mesReferencia);
+  return transacoes.filter(t => dataEstaNoMes(t.data, mesReferencia));
 }
 
 export function filtrarPorCategoria(transacoes, categoria) {
