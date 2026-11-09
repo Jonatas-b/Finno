@@ -1,12 +1,12 @@
 import { categorias } from "../utils/categorias.js";
 import { capitalizar } from "../utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "../utils/moeda.js";
-import { getUserConfig, carregarUsuario, adicionarTransacao, removerTransacao } from "./usuario.js";
-import { converterParaFormatoBR, obterMesAtual } from "../utils/data.js";
-import { filtrarPorMes } from "./filtros.js";
+import { getUserConfig, carregarUsuario, adicionarTransacao, removerTransacao, atualizarTransacao } from "./usuario.js";
+import { converterParaFormatoBR, obterMesAtual, converterDataParaEscrita } from "../utils/data.js";
+import { filtrarPorMes, categoriaReceita, dataEstaNoMes } from "./filtros.js";
 import { calcularResumoDoMes, textoPercentualRestante } from "./calculos.js";
-// EXIBIR AS LINHAS DAS TABELAS DE LANÇAMENTO, RESUMO NO DASHBOARD E HISTÓRICO
 
+// EXIBIR AS LINHAS DAS TABELAS DE LANÇAMENTO, RESUMO NO DASHBOARD E HISTÓRICO
 export function criarLinhaTabelaLancamentos(transacao) {
   document.getElementById("tabelaLancamentos").insertAdjacentHTML("beforeend", `
     <tr>
@@ -79,6 +79,93 @@ export function carregarLancamentos() {
   });
 }
 
+// FORMULÁRIO DE LANÇAMENTO: ler, preencher e limpar os campos
+export function lerFormulario() {
+  return {
+    descricao: document.getElementById("description").value.trim(),
+    valor: desformatarMoeda(document.getElementById("value").value.trim()),
+    categoria: document.getElementById("category").value.trim(),
+    data: document.getElementById("date").value.trim(),
+    recorrencia: document.getElementById("recorrencia").value.trim(),
+  };
+}
+
+// Caminho inverso de lerFormulario: o valor volta formatado como moeda.
+export function preencherFormulario(transacao) {
+  document.getElementById("description").value = transacao.descricao;
+  document.getElementById("value").value = formatarComoMoeda(transacao.valor);
+  document.getElementById("category").value = transacao.categoria;
+  document.getElementById("date").value = transacao.data;
+  document.getElementById("recorrencia").value = transacao.recorrencia;
+}
+
+export function limparFormulario() {
+  document.getElementById("description").value = "";
+  document.getElementById("value").value = "";
+  document.getElementById("date").value = "";
+}
+
+// Define se o formulário está em modo despesa ou receita ("despesa" | "receita").
+// É o único lugar que mexe no toggle e na option "Receita" do select:
+// o clique nos botões e a edição de um lançamento chamam esta função.
+export function definirTipo(tipo) {
+  const ehReceita = tipo === "receita";
+  const select = document.getElementById("category");
+  const optionReceita = select.querySelector(`option[value="${categoriaReceita}"]`);
+
+  document.getElementById("btnReceita").classList.toggle("active", ehReceita);
+  document.getElementById("btnDespesa").classList.toggle("active", !ehReceita);
+
+  if (ehReceita) {
+    if (optionReceita === null) {
+      select.insertAdjacentHTML("beforeend", `<option value="${categoriaReceita}">Receita</option>`);
+    }
+    select.value = categoriaReceita;
+    select.disabled = true;
+  } else {
+    select.value = "alimentacao";
+    select.disabled = false;
+    if (optionReceita !== null) optionReceita.remove();
+  }
+}
+
+let idEmEdicao = null;
+const tituloFormularioPadrao = document.getElementById('tituloFormulario').textContent.trim();
+const salvarLancamentoPadrao = document.getElementById('salvarLancamento').textContent.trim();
+const cancelarLancamentoPadrao = document.getElementById('cancelarLancamento').textContent.trim();
+
+export function iniciarEdicao (id) {
+  const transacao = getUserConfig().transacoes.find(item => item.id === id);
+  if (transacao === undefined) return;
+
+  // Primeiro o tipo (cria a option "Receita" se preciso), depois os campos:
+  // na ordem inversa, definirTipo sobrescreveria a categoria preenchida.
+  definirTipo(transacao.categoria === categoriaReceita ? "receita" : "despesa");
+  preencherFormulario(transacao);
+  idEmEdicao = id;
+
+  document.getElementById('tituloFormulario').textContent = "Editar lançamento";
+  document.getElementById('salvarLancamento').textContent = "Salvar edição";
+  document.getElementById('cancelarLancamento').textContent = "Cancelar edição";
+}
+
+export function encerrarEdicao () {
+  document.getElementById('tituloFormulario').textContent = tituloFormularioPadrao;
+  document.getElementById('salvarLancamento').textContent = salvarLancamentoPadrao;
+  document.getElementById('cancelarLancamento').textContent = cancelarLancamentoPadrao;
+  limparFormulario();
+  definirTipo("despesa");
+  idEmEdicao = null;
+}
+
+// A tabela de lançamentos mostra só o mês atual. Quando o lançamento cai em outro mês,
+// devolve o aviso para o usuário saber onde ele foi parar; senão, texto vazio.
+function avisoDeOutroMes(data) {
+  if (dataEstaNoMes(data, obterMesAtual())) return "";
+
+  return `\n\nEle foi salvo em ${converterDataParaEscrita(data)} e não aparece na tabela deste mês. Para vê-lo, use o Histórico.`;
+}
+
 export function lancarDespesa(aoSalvar) {
   carregarUsuario();
 
@@ -93,38 +180,38 @@ export function lancarDespesa(aoSalvar) {
   });
 
   document.getElementById("salvarLancamento").addEventListener('click', function () {
-    let lancamentoDescricao = document.getElementById("description").value.trim();
-    let lancamentoValor = document.getElementById("value").value.trim();
-    let lancamentoCategoria = document.getElementById("category").value.trim();
-    let lancamentoData = document.getElementById("date").value.trim();
-    let lancamentoRecorrencia = document.getElementById("recorrencia").value.trim();
-
-    if (lancamentoDescricao === "" || lancamentoValor === "" || lancamentoData === "") {
+    const dados = lerFormulario();
+      
+    if (dados.descricao === "" || dados.data === "") {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
+    if (dados.valor === 0) {
+      alert("Informe um valor maior que zero.");
+      return;
+    }
 
-    const novaTransacao = {
-      id: Date.now(),
-      descricao: lancamentoDescricao,
-      valor: desformatarMoeda(lancamentoValor),
-      categoria: lancamentoCategoria,
-      data: lancamentoData,
-      recorrencia: lancamentoRecorrencia,
-    };
+    let mensagem;
 
-    adicionarTransacao(novaTransacao);
+    if (idEmEdicao !== null) {
+      const atualizou = atualizarTransacao(idEmEdicao, dados);
+      encerrarEdicao();
+      mensagem = atualizou
+        ? "Edição concluída." + avisoDeOutroMes(dados.data)
+        : "Este lançamento não existe mais, então nada foi alterado.";
+    } else {
+      adicionarTransacao({ id: Date.now(), ...dados });
+      limparFormulario();
+      mensagem = "Lançamento concluído." + avisoDeOutroMes(dados.data);
+    }
+
     aoSalvar();
-
-    alert("Lançamento concluído.")
-
-    document.getElementById("description").value = "";
-    document.getElementById("value").value = "";
-    document.getElementById("date").value = "";
+    alert(mensagem);
+    
   });
 }
 
-export function excluirLancamento (aoSalvar) {
+export function ligarAcoesDaTabela (aoSalvar) {
   document.getElementById('tabelaLancamentos').addEventListener('click', function (evento) {
     const btn = evento.target.closest("button");
     if (btn === null) return;
@@ -134,20 +221,25 @@ export function excluirLancamento (aoSalvar) {
     if (btn.dataset.acao === "excluir" && window.confirm("Tem certeza que deseja excluir o lançamento? Essa ação não pode ser desfeita!")) {
       removerTransacao(idBtnClicado);
       aoSalvar();
+      if (idBtnClicado === idEmEdicao) {
+        encerrarEdicao();
+      }
+    }
+    else if (btn.dataset.acao === "editar") {
+      iniciarEdicao(idBtnClicado);
+      document.getElementById('description').focus();
     }
   });
 }
 
 export function cancelarLancamento () {
-  document.getElementById('cancelarLancamento').addEventListener('click', function () {
-    document.getElementById("description").value = "";
-    document.getElementById("value").value = "";
-    document.getElementById("date").value = "";
-  })
+  document.getElementById('cancelarLancamento').addEventListener('click', () => {
+    encerrarEdicao();
+  });
 }
 
 // Badge "% restante" usado no dashboard e no histórico.
-// Recebe o resumo de calcularResumoDoMes, então a regra (texto e cor) fica num lugar só.
+// Recebe o resumo de calcularResumoDoMes
 export function exibirBadgeRestante(id, resumo) {
   const badge = document.getElementById(id);
 

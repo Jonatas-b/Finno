@@ -2,7 +2,7 @@ import { trocaTela } from "./router.js";
 import { capitalizar } from "./utils/texto.js";
 import { formatarComoMoeda, desformatarMoeda } from "./utils/moeda.js";
 import { carregarUsuario, getUserConfig, atualizarDadosUsuario } from "./modules/usuario.js";
-import { lancarDespesa, excluirLancamento, carregarLancamentos, renderizarResumo, percentualComprometido, cancelarLancamento } from "./modules/transacoes.js";
+import { lancarDespesa, ligarAcoesDaTabela, carregarLancamentos, renderizarResumo, percentualComprometido, cancelarLancamento, definirTipo } from "./modules/transacoes.js";
 import { toggleTema } from "./modules/tema.js";
 import { exibirDataAtual, obterMesAtual } from "./utils/data.js";
 import { categoriaReceita, filtrarPorMes, filtrarPorCategoria, somarValores } from "./modules/filtros.js";
@@ -83,31 +83,12 @@ function pegarInformacoesDoUser() {
 }
 
 function trocarTipoLancamento () {
-  const btnDespesa = document.getElementById('btnDespesa');
-  const btnReceita = document.getElementById('btnReceita');
-
-  btnReceita.addEventListener('click', function () {
-    document.getElementById('btnReceita').classList.add('active');
-    document.getElementById('btnDespesa').classList.remove('active');
-    
-    document.getElementById('category').insertAdjacentHTML("beforeend", `<option value="receita">Receita</option>`);
-    document.getElementById('category').value = "receita";
-    document.getElementById('category').disabled = true;
-    
-  })
-  btnDespesa.addEventListener('click', function () {
-    document.getElementById('btnDespesa').classList.add('active');
-    document.getElementById('btnReceita').classList.remove('active');
-
-    document.getElementById('category').value = 'alimentacao';
-    document.getElementById('category').disabled = false;
-    
-
-
-    const ultima = document.getElementById('category').options[document.getElementById('category').options.length - 1];
-    if (ultima?.value === "receita") ultima.remove();
-  })
-
+  document.getElementById('btnReceita').addEventListener('click', function () {
+    definirTipo("receita");
+  });
+  document.getElementById('btnDespesa').addEventListener('click', function () {
+    definirTipo("despesa");
+  });
 }
 
 function limparTodosDados() {
@@ -116,8 +97,6 @@ function limparTodosDados() {
     location.reload(true);
   });
 }
-
-
 
 function exibirTabelaGastosPorCategoria (doMes) {
   let linhas = "";
@@ -163,7 +142,7 @@ pegarInformacoesDoUser();
 limparTodosDados();
 iniciarFiltrosHistorico();
 lancarDespesa(atualizarTela);
-excluirLancamento(atualizarTela);
+ligarAcoesDaTabela(atualizarTela);
 exibirDataAtual();
 trocarTipoLancamento();
 atualizarTela();
