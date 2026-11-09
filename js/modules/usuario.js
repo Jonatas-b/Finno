@@ -1,3 +1,5 @@
+import { atualizarPorId, removerPorId } from "./lista.js";
+
 // Objeto user
 let userConfig = {
   nome: "",
@@ -44,10 +46,20 @@ export function adicionarTransacao(transacao) {
 }
 
 export function removerTransacao (id) {
-  const index = userConfig.transacoes.findIndex(item => item.id === id);
-
-  if (index !== -1) userConfig.transacoes.splice(index, 1);
+  userConfig.transacoes = removerPorId(userConfig.transacoes, id);
   salvarUsuario();
+}
+
+// Devolve true se atualizou e false se o lançamento não existe mais.
+// Relê o localStorage antes: outra aba pode ter apagado o lançamento (ou os dados)
+// depois que esta página carregou, e a memória desta aba estaria desatualizada.
+export function atualizarTransacao(id, novosDados) {
+  if (carregarUsuario() === null) return false;
+  if (!userConfig.transacoes.some(item => item.id === id)) return false;
+
+  userConfig.transacoes = atualizarPorId(userConfig.transacoes, id, novosDados);
+  salvarUsuario();
+  return true;
 }
 
 export function atualizarTema(tema) {
